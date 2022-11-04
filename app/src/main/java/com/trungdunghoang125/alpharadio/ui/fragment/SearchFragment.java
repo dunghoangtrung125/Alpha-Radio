@@ -1,4 +1,4 @@
-package com.trungdunghoang125.alpharadio.ui;
+package com.trungdunghoang125.alpharadio.ui.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

@@ -7,5 +7,5 @@
     <dimen name="dimen_8">8dp</dimen>
     <dimen name="dimen_64">64dp</dimen>
     <dimen name="dimen_0">0dp</dimen>
-    <dimen name="gridview_category_item_height">160dp</dimen>
+    <dimen name="gridview_category_item_height">120dp</dimen>
 </resources>

@@ -9,7 +9,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_view"
-        android:name="com.trungdunghoang125.alpharadio.ui.HomeFragment"
+        android:name="com.trungdunghoang125.alpharadio.ui.fragment.HomeFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />

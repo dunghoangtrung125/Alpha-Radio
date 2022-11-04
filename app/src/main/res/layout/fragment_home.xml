@@ -6,12 +6,12 @@
     android:layout_height="match_parent"
     android:background="@color/teal_200"
     android:orientation="vertical"
-    tools:context=".ui.HomeFragment">
+    tools:context=".ui.fragment.HomeFragment">
 
     <LinearLayout
         android:id="@+id/linear_app_bar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/dimen_0"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="horizontal">
@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_0"
         android:layout_weight="7"
-        android:background="@drawable/test"
+        android:background="@drawable/background_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/app_bar">
@@ -55,11 +55,14 @@
             app:layout_constraintTop_toTopOf="@+id/constraint_find_radio" />
 
         <GridView
-            android:id="@+id/grid_category_radio"
+            android:id="@+id/grid_radio_filter"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/gridview_category_item_height"
+            android:layout_height="wrap_content"
+            android:horizontalSpacing="@dimen/dimen_8"
+            android:layout_margin="@dimen/dimen_8"
             android:numColumns="2"
-            app:layout_constraintTop_toBottomOf="@+id/constraint_find_radio" />
+            android:verticalSpacing="@dimen/dimen_8"
+            app:layout_constraintTop_toBottomOf="@+id/text_find_radio_title" />
 
         <TextView
             android:id="@+id/text_radio_suggestion_title"
@@ -69,7 +72,7 @@
             android:text="@string/recommend_stations"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_24"
-            app:layout_constraintTop_toBottomOf="@+id/grid_category_radio" />
+            app:layout_constraintTop_toBottomOf="@+id/grid_radio_filter" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_recommend_radio"

@@ -11,6 +11,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.trungdunghoang125.alpharadio.R;
 import com.trungdunghoang125.alpharadio.databinding.ActivityMainBinding;
+import com.trungdunghoang125.alpharadio.ui.fragment.FavoriteFragment;
+import com.trungdunghoang125.alpharadio.ui.fragment.HomeFragment;
+import com.trungdunghoang125.alpharadio.ui.fragment.NearYouFragment;
+import com.trungdunghoang125.alpharadio.ui.fragment.SearchFragment;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;

@@ -3,16 +3,17 @@ package com.trungdunghoang125.alpharadio.model;
 import com.google.gson.annotations.SerializedName;
 
 public class CountryModel {
-    private String name;
+    @SerializedName("name")
+    private String mCountryName;
 
     @SerializedName("stationcount")
-    private int numberOfStation;
+    private int mNumberOfStation;
 
-    public String getName() {
-        return name;
+    public String getCountryName() {
+        return mCountryName;
     }
 
     public int getNumberOfStation() {
-        return numberOfStation;
+        return mNumberOfStation;
     }
 }

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/teal_200"
     android:orientation="vertical"
-    tools:context=".ui.SearchFragment">
+    tools:context=".ui.fragment.SearchFragment">
 
     <LinearLayout
         android:id="@+id/linear_search_bar"
@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="7"
-        android:background="@drawable/test">
+        android:background="@drawable/background_layout">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/near_me_result_list"
