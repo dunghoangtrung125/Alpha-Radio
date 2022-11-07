@@ -12,7 +12,7 @@ import java.util.List;
  */
 
 public final class Constants {
-    public static final List<RadioFilterTypeModel> mFilterList = Collections.unmodifiableList(
+    public static final List<RadioFilterTypeModel> sFilterList = Collections.unmodifiableList(
             new ArrayList<RadioFilterTypeModel>() {{
                 add(new RadioFilterTypeModel("By country", R.drawable.filter_item_background));
                 add(new RadioFilterTypeModel("By language", R.drawable.filter_item_background));
