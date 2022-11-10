@@ -1,4 +1,4 @@
-package com.trungdunghoang125.alpharadio.ui;
+package com.trungdunghoang125.alpharadio.ui.activity;
 
 import android.os.Bundle;
 import android.view.MenuItem;

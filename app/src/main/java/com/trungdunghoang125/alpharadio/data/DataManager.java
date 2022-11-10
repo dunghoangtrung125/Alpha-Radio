@@ -24,7 +24,7 @@ public class DataManager {
         return instance;
     }
 
-    public RadioRepository getMovieRepository() {
+    public RadioRepository getRadioRepository() {
 
         RadioBrowserApi radioBrowserApi = RetrofitClient.getInstance().getApi();
         RadioRemoteDataSource remoteDataSource = RadioRemoteDataSource.getInstance(radioBrowserApi);

@@ -1,4 +1,4 @@
-package com.trungdunghoang125.alpharadio.viewmodel;
+package com.trungdunghoang125.alpharadio.viewmodel.country;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,17 +10,16 @@ import com.trungdunghoang125.alpharadio.data.repository.RadioRepository;
 import java.util.List;
 
 /**
- * Created by trungdunghoang125 on 11/4/2022.
+ * Created by trungdunghoang125 on 11/10/2022.
  */
-public class HomeViewModel extends ViewModel {
-    private final MutableLiveData<List<Country>> countriesLiveData = new MutableLiveData<>();
-
+public class CountryViewModel extends ViewModel {
     private final RadioRepository radioRepository;
+
+    private final MutableLiveData<List<Country>> countriesLiveData = new MutableLiveData<>();
 
     private final RadioCallback radioCallback = new RadioCallback();
 
-
-    public HomeViewModel(RadioRepository radioRepository) {
+    public CountryViewModel(RadioRepository radioRepository) {
         this.radioRepository = radioRepository;
     }
 

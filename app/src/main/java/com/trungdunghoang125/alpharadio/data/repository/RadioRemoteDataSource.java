@@ -1,7 +1,10 @@
 package com.trungdunghoang125.alpharadio.data.repository;
 
 
+import android.util.Log;
+
 import com.trungdunghoang125.alpharadio.data.model.Country;
+import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 import com.trungdunghoang125.alpharadio.data.remote.RadioBrowserApi;
 
 import java.util.List;
@@ -48,5 +51,27 @@ public class RadioRemoteDataSource implements RadioDataSource.Remote {
                 callback.onError();
             }
         });
+    }
+
+    @Override
+    public void getCountryRadioStation(RadioRepository.LoadStationsCallback callback, String countryCode) {
+        Log.d("tranle1811", "getCountryRadioStation: " + countryCode);
+        api.getCountryRadioStation(countryCode, false, 0, 100000, false)
+                .enqueue(new Callback<List<RadioStation>>() {
+                    @Override
+                    public void onResponse(Call<List<RadioStation>> call, Response<List<RadioStation>> response) {
+                        List<RadioStation> stationList = response.body();
+                        if (stationList != null && !stationList.isEmpty()) {
+                            callback.onStationsLoad(stationList);
+                        } else {
+                            callback.onDataLoadFailed();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<RadioStation>> call, Throwable t) {
+                        callback.onError();
+                    }
+                });
     }
 }

@@ -22,4 +22,5 @@ public final class Constants {
     public static final String BASE_URL = "https://radio-browser.p.rapidapi.com/json/";
     public static final String X_RAPIDAPI_KEY = "a0ffb895eamshb2ff9106aeaf436p1b9818jsn220519fbf2c3";
     public static final String X_RAPIDAPI_HOST = "radio-browser.p.rapidapi.com";
+    public static final String BASE_COUNTRY_FLAG_URL = "https://www.countryflagicons.com/FLAT/64/";
 }

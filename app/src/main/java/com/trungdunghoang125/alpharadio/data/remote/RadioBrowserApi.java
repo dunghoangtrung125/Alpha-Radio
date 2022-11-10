@@ -41,7 +41,7 @@ public interface RadioBrowserApi {
             "X-RapidAPI-Host: " + Constants.X_RAPIDAPI_HOST
     })
     @GET("stations/search")
-    Call<List<RadioStation>> getVnRadio(
+    Call<List<RadioStation>> getCountryRadioStation(
             @Query("countrycode") String code,
             @Query("reverse") boolean reverse,
             @Query("offset") int offset,

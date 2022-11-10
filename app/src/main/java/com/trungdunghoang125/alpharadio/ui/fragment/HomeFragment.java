@@ -9,17 +9,18 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.trungdunghoang125.alpharadio.data.DataManager;
 import com.trungdunghoang125.alpharadio.data.model.Country;
 import com.trungdunghoang125.alpharadio.data.repository.RadioRepository;
 import com.trungdunghoang125.alpharadio.databinding.FragmentHomeBinding;
+import com.trungdunghoang125.alpharadio.ui.activity.CountryActivity;
+import com.trungdunghoang125.alpharadio.ui.activity.LanguageActivity;
 import com.trungdunghoang125.alpharadio.ui.adapter.RadioFilterGridViewAdapter;
 import com.trungdunghoang125.alpharadio.utils.Constants;
-import com.trungdunghoang125.alpharadio.viewmodel.HomeViewModel;
-import com.trungdunghoang125.alpharadio.viewmodel.HomeViewModelFactory;
+import com.trungdunghoang125.alpharadio.viewmodel.home.HomeViewModel;
+import com.trungdunghoang125.alpharadio.viewmodel.home.HomeViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RadioRepository radioRepository = DataManager.getInstance().getMovieRepository();
+        RadioRepository radioRepository = DataManager.getInstance().getRadioRepository();
         HomeViewModelFactory factory = new HomeViewModelFactory(radioRepository);
         viewModel = new ViewModelProvider(getActivity(), factory).get(HomeViewModel.class);
     }
@@ -63,17 +64,15 @@ public class HomeFragment extends Fragment {
                 switch (position) {
                     case 0:
                         Log.d("hoangdung1205", "onItemClick: " + "item country click");
+                        CountryActivity.start(getActivity());
                         break;
                     case 1:
                         Log.d("hoangdung1205", "onItemClick: " + "item language click");
+                        LanguageActivity.start(getActivity());
                         break;
                 }
             }
         });
-
-        // get Countries data
-        viewModel.getCountries();
-        observerData();
 
         return view;
     }
@@ -82,16 +81,5 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    private void observerData() {
-        viewModel.getCountriesLiveData().observe(getViewLifecycleOwner(), new Observer<List<Country>>() {
-            @Override
-            public void onChanged(List<Country> countries) {
-                for (Country country : countries) {
-                    Log.d("hoangdung1205", "onChanged: " + country.getName() + " " + country.getStationCount());
-                }
-            }
-        });
     }
 }

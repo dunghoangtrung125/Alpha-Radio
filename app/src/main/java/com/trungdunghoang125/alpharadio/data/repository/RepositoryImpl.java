@@ -1,6 +1,7 @@
 package com.trungdunghoang125.alpharadio.data.repository;
 
 import com.trungdunghoang125.alpharadio.data.model.Country;
+import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 
 import java.util.List;
 
@@ -32,6 +33,36 @@ public class RepositoryImpl implements RadioRepository {
 
     @Override
     public void saveCountries(List<Country> countries) {
+
+    }
+
+    @Override
+    public void getStations(LoadStationsCallback callback, String countryCode) {
+        if (callback == null) return;
+        getStationsFromRemote(callback, countryCode);
+    }
+
+    private void getStationsFromRemote(LoadStationsCallback callback, String countryCode) {
+        remote.getCountryRadioStation(new LoadStationsCallback() {
+            @Override
+            public void onStationsLoad(List<RadioStation> stations) {
+                callback.onStationsLoad(stations);
+            }
+
+            @Override
+            public void onDataLoadFailed() {
+                callback.onDataLoadFailed();
+            }
+
+            @Override
+            public void onError() {
+                callback.onError();
+            }
+        }, countryCode);
+    }
+
+    @Override
+    public void saveStations(List<RadioStation> stations) {
 
     }
 

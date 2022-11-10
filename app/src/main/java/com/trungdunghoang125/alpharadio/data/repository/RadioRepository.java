@@ -2,6 +2,7 @@ package com.trungdunghoang125.alpharadio.data.repository;
 
 
 import com.trungdunghoang125.alpharadio.data.model.Country;
+import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 
 import java.util.List;
 
@@ -21,4 +22,16 @@ public interface RadioRepository {
     void getCountries(LoadCountriesCallback callback);
 
     void saveCountries(List<Country> countries);
+
+    interface LoadStationsCallback {
+        void onStationsLoad(List<RadioStation> stations);
+
+        void onDataLoadFailed();
+
+        void onError();
+    }
+
+    void getStations(LoadStationsCallback callback, String countryCode);
+
+    void saveStations(List<RadioStation> stations);
 }

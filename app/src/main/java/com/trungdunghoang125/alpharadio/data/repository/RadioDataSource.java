@@ -8,6 +8,8 @@ import java.util.List;
 public interface RadioDataSource {
     interface Remote {
         void getCountries(RadioRepository.LoadCountriesCallback callback);
+
+        void getCountryRadioStation(RadioRepository.LoadStationsCallback callback, String countryCode);
     }
 
     interface Local extends Remote {
