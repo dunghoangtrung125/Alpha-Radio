@@ -1,4 +1,4 @@
-package com.trungdunghoang125.alpharadio.model;
+package com.trungdunghoang125.alpharadio.data.model;
 
 /**
  * Created by trungdunghoang125 on 11/3/2022.

@@ -44,6 +44,8 @@ dependencies {
     // live data and view model
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
-    // module library
-    implementation project(":radio-browser-okhttp")
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    // Gson Converter
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 }

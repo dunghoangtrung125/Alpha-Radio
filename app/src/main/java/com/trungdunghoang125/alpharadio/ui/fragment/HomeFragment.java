@@ -5,33 +5,33 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.trungdunghoang125.alpharadio.data.DataManager;
+import com.trungdunghoang125.alpharadio.data.model.Country;
+import com.trungdunghoang125.alpharadio.data.repository.RadioRepository;
 import com.trungdunghoang125.alpharadio.databinding.FragmentHomeBinding;
 import com.trungdunghoang125.alpharadio.ui.adapter.RadioFilterGridViewAdapter;
 import com.trungdunghoang125.alpharadio.utils.Constants;
 import com.trungdunghoang125.alpharadio.viewmodel.HomeViewModel;
-import com.trungdunghoang125.radiobrowserokhttp.Utility;
-import com.trungdunghoang125.radiobrowserokhttp.model.CountryModel;
+import com.trungdunghoang125.alpharadio.viewmodel.HomeViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
-    private List<CountryModel> mCountryList = new ArrayList<>();
+    private List<Country> mCountryList = new ArrayList<>();
 
     private GridView mRadioFilterGrid;
 
     private FragmentHomeBinding binding;
 
     private HomeViewModel viewModel;
-
-    Toast toast;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -40,7 +40,9 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        RadioRepository radioRepository = DataManager.getInstance().getMovieRepository();
+        HomeViewModelFactory factory = new HomeViewModelFactory(radioRepository);
+        viewModel = new ViewModelProvider(getActivity(), factory).get(HomeViewModel.class);
     }
 
     @Override
@@ -54,15 +56,24 @@ public class HomeFragment extends Fragment {
         // set Adapter for Gridview
         RadioFilterGridViewAdapter adapter = new RadioFilterGridViewAdapter(requireContext(), Constants.sFilterList);
         mRadioFilterGrid.setAdapter(adapter);
-
-        Utility.ShowToast.initToast(getContext(), toast, "Toast from radio-browser");
-
-        viewModel.getCountryList().observe(getViewLifecycleOwner(), new Observer<List<CountryModel>>() {
+        // onClickListener for GridView
+        mRadioFilterGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onChanged(List<CountryModel> result) {
-                Log.d("tranle1205", "onChanged: " + result.get(0).getCountryName());
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        Log.d("hoangdung1205", "onItemClick: " + "item country click");
+                        break;
+                    case 1:
+                        Log.d("hoangdung1205", "onItemClick: " + "item language click");
+                        break;
+                }
             }
         });
+
+        // get Countries data
+        viewModel.getCountries();
+        observerData();
 
         return view;
     }
@@ -71,5 +82,16 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void observerData() {
+        viewModel.getCountriesLiveData().observe(getViewLifecycleOwner(), new Observer<List<Country>>() {
+            @Override
+            public void onChanged(List<Country> countries) {
+                for (Country country : countries) {
+                    Log.d("hoangdung1205", "onChanged: " + country.getName() + " " + country.getStationCount());
+                }
+            }
+        });
     }
 }

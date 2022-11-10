@@ -1,7 +1,7 @@
 package com.trungdunghoang125.alpharadio.utils;
 
 import com.trungdunghoang125.alpharadio.R;
-import com.trungdunghoang125.alpharadio.model.RadioFilterTypeModel;
+import com.trungdunghoang125.alpharadio.data.model.RadioFilterTypeModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,4 +18,8 @@ public final class Constants {
                 add(new RadioFilterTypeModel("By language", R.drawable.filter_item_background));
             }}
     );
+
+    public static final String BASE_URL = "https://radio-browser.p.rapidapi.com/json/";
+    public static final String X_RAPIDAPI_KEY = "a0ffb895eamshb2ff9106aeaf436p1b9818jsn220519fbf2c3";
+    public static final String X_RAPIDAPI_HOST = "radio-browser.p.rapidapi.com";
 }

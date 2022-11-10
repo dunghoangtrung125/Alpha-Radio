@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.trungdunghoang125.alpharadio.R;
-import com.trungdunghoang125.alpharadio.model.RadioFilterTypeModel;
+import com.trungdunghoang125.alpharadio.data.model.RadioFilterTypeModel;
 
 import java.util.List;
 

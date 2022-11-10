@@ -14,4 +14,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Alpha Radio"
 include ':app'
-include ':radio-browser-okhttp'

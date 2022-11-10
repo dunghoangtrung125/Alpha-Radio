@@ -42,31 +42,3 @@ public class RadioApi {
         return sClient.newCall(request);
     }
 }
-
-/*
-        ExecutorService executor = Executors.newFixedThreadPool(1);
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder()
-                        .url("https://radio-browser.p.rapidapi.com/json/countrycodes?reverse=false&hidebroken=false")
-                        .get()
-                        .addHeader("X-RapidAPI-Key", "a0ffb895eamshb2ff9106aeaf436p1b9818jsn220519fbf2c3")
-                        .addHeader("X-RapidAPI-Host", "radio-browser.p.rapidapi.com")
-                        .build();
-                try {
-                    Response response = client.newCall(request).execute();
-                    if (response.isSuccessful()) {
-                        Gson gson = new Gson();
-                        Type fooType = new TypeToken<ArrayList<CountryModel>>() {
-                        }.getType();
-                        List<CountryModel> countryList = gson.fromJson(response.body().string(), fooType);
-                        Log.d("tranle1811", "run: " + countryList.get(0).getCountryName());
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
- */

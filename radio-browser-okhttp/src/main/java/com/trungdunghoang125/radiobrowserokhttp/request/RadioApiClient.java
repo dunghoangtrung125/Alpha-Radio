@@ -1,5 +1,7 @@
 package com.trungdunghoang125.radiobrowserokhttp.request;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -58,27 +60,3 @@ public class RadioApiClient {
         return countryList;
     }
 }
-
-/*
-    public void getCountryCode(CountDownLatch latch) {
-        AppExecutors.getExecutorInstance().execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Response response = RadioApi.getInstance().getCountryCode().execute();
-                    if (response.isSuccessful()) {
-                        Gson gson = new Gson();
-                        Type fooType = new TypeToken<ArrayList<CountryModel>>() {
-                        }.getType();
-                        List<CountryModel> result = gson.fromJson(response.body().string(), fooType);
-                        Log.d("tranle1811", "getCountryCode in Api client: " + result.get(0).getCountryName());
-                        countryList.postValue(result);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                latch.countDown();
-            }
-        });
-    }
- */
