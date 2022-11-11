@@ -1,6 +1,7 @@
 package com.trungdunghoang125.alpharadio.ui.adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.trungdunghoang125.alpharadio.R;
+import com.trungdunghoang125.alpharadio.data.model.Country;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 import com.trungdunghoang125.alpharadio.databinding.ItemRadioStationBinding;
 
@@ -52,7 +54,7 @@ public class RadioStationAdapter extends RecyclerView.Adapter<RadioStationAdapte
         notifyDataSetChanged();
     }
 
-    public static class StationViewHolder extends RecyclerView.ViewHolder {
+    public class StationViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView mImageFavicon;
 
@@ -76,14 +78,40 @@ public class RadioStationAdapter extends RecyclerView.Adapter<RadioStationAdapte
         public void bind(RadioStation station, StationViewHolder holder) {
             Glide.with(holder.itemView.getContext())
                     .applyDefaultRequestOptions(new RequestOptions()
-                            .placeholder(R.drawable.radio_icon))
+                            .placeholder(R.drawable.ic_radio))
                     .load(station.getFavicon())
                     .into(mImageFavicon);
 
-            mTextStationName.setText(station.getName());
-            mTextStationState.setText(station.getState());
-            mTextStationCountry.setText(station.getCountry());
+            if (station.getName().length() >= 20) {
+                mTextStationName.setText(station.getName().substring(0, 20) + "...");
+            } else {
+                mTextStationName.setText(station.getName());
+            }
+
+            if (station.getState().length() >= 10) {
+                mTextStationState.setText(station.getState().substring(0, 10) + "...");
+            } else {
+                mTextStationState.setText(station.getState());
+            }
+
+            if (station.getCountry().length() >= 10) {
+                mTextStationCountry.setText(station.getCountry().substring(0, 10) + "...");
+            } else {
+                mTextStationCountry.setText(station.getCountry());
+            }
+
             mTextStationBitrate.setText(String.valueOf(station.getBitrate()) + "kbps");
+            setClickListener(station);
+        }
+
+        private void setClickListener(RadioStation station) {
+            itemView.setTag(station);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            stationItemClick.onItemClick((RadioStation) view.getTag());
         }
     }
 

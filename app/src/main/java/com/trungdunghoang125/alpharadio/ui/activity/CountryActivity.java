@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -18,8 +17,6 @@ import com.trungdunghoang125.alpharadio.databinding.ActivityCountryBinding;
 import com.trungdunghoang125.alpharadio.ui.adapter.CountryListAdapter;
 import com.trungdunghoang125.alpharadio.viewmodel.country.CountryViewModel;
 import com.trungdunghoang125.alpharadio.viewmodel.country.CountryViewModelFactory;
-
-import java.util.List;
 
 public class CountryActivity extends AppCompatActivity implements CountryListAdapter.CountryItemClick {
 
@@ -55,13 +52,10 @@ public class CountryActivity extends AppCompatActivity implements CountryListAda
     }
 
     private void swipeToRefreshData() {
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                viewModel.getCountries();
-                observerCountryData();
-                swipeRefreshLayout.setRefreshing(false);
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            viewModel.getCountries();
+            observerCountryData();
+            swipeRefreshLayout.setRefreshing(false);
         });
     }
 
@@ -71,15 +65,12 @@ public class CountryActivity extends AppCompatActivity implements CountryListAda
     }
 
     private void observerCountryData() {
-        viewModel.getCountriesLiveData().observe(this, new Observer<List<Country>>() {
-            @Override
-            public void onChanged(List<Country> countries) {
-                for (Country country : countries) {
-                    Log.d("hoangdung1205", "onChanged: " + country.getName() + " " + country.getStationCount());
-                }
-                CountryListAdapter adapter = new CountryListAdapter(countries, CountryActivity.this);
-                mRcvCountry.setAdapter(adapter);
+        viewModel.getCountriesLiveData().observe(this, countries -> {
+            for (Country country : countries) {
+                Log.d("hoangdung1205", "onChanged: " + country.getName() + " " + country.getStationCount());
             }
+            CountryListAdapter adapter = new CountryListAdapter(countries, CountryActivity.this);
+            mRcvCountry.setAdapter(adapter);
         });
     }
 }

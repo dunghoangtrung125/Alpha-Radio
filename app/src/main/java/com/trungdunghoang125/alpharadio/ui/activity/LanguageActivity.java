@@ -1,12 +1,11 @@
 package com.trungdunghoang125.alpharadio.ui.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.trungdunghoang125.alpharadio.R;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.trungdunghoang125.alpharadio.databinding.ActivityLanguageBinding;
 
 public class LanguageActivity extends AppCompatActivity {

@@ -9,4 +9,5 @@
     <string name="search">Search</string>
     <string name="home">Home</string>
     <string name="country">Country</string>
+    <string name="search_station_hint">Search Stations</string>
 </resources>

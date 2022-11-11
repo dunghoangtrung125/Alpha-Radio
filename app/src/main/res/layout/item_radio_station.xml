@@ -4,7 +4,7 @@
     android:id="@+id/card_radio_station"
     android:layout_width="match_parent"
     android:layout_height="@dimen/card_view_height"
-    android:layout_marginBottom="1dp"
+    android:layout_marginBottom="@dimen/dimen_1"
     app:cardCornerRadius="@dimen/dimen_16"
     app:cardElevation="@dimen/dimen_8">
 
@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/image_favicon"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="@dimen/image_favicon_dimen"
+            android:layout_height="@dimen/image_favicon_dimen"
             android:layout_margin="@dimen/dimen_8"
             app:layout_constraintBottom_toBottomOf="@id/constraint_card_radio"
             app:layout_constraintStart_toStartOf="@id/constraint_card_radio"
@@ -29,15 +29,18 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_32"
             android:text="VOV1"
-            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_16"
+            app:layout_constraintBottom_toTopOf="@+id/text_station_state"
             app:layout_constraintStart_toEndOf="@+id/image_favicon"
-            app:layout_constraintTop_toTopOf="@+id/image_favicon" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/text_station_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Hanoi"
+            app:layout_constraintBottom_toTopOf="@+id/text_station_bitrate"
             app:layout_constraintStart_toStartOf="@+id/text_station_name"
             app:layout_constraintTop_toBottomOf="@+id/text_station_name" />
 
@@ -47,17 +50,29 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_8"
             android:text="Vietnam"
+            app:layout_constraintBottom_toBottomOf="@+id/text_station_state"
             app:layout_constraintStart_toEndOf="@+id/text_station_state"
-            app:layout_constraintTop_toBottomOf="@+id/text_station_name" />
+            app:layout_constraintTop_toTopOf="@+id/text_station_state" />
 
         <TextView
             android:id="@+id/text_station_bitrate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="128kbps"
-            app:layout_constraintBottom_toBottomOf="@+id/image_favicon"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/text_station_name"
             app:layout_constraintTop_toBottomOf="@+id/text_station_state" />
+
+        <CheckBox
+            android:id="@+id/checkbox_fav_station"
+            android:layout_width="@dimen/dimen_24"
+            android:layout_height="@dimen/dimen_24"
+            android:layout_marginEnd="@dimen/dimen_16"
+            android:background="@drawable/checkbox_selector_favorite"
+            android:button="@null"
+            app:layout_constraintBottom_toBottomOf="@+id/image_favicon"
+            app:layout_constraintEnd_toEndOf="@id/constraint_card_radio"
+            app:layout_constraintTop_toTopOf="@+id/image_favicon" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
