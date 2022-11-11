@@ -44,9 +44,14 @@ public class CountryActivity extends AppCompatActivity implements CountryListAda
         CountryViewModelFactory factory = new CountryViewModelFactory(radioRepository);
         viewModel = new ViewModelProvider(this, factory).get(CountryViewModel.class);
         // get Countries data
-        observerCountryData();
         viewModel.getCountries();
+        observerCountryData();
         swipeToRefreshData();
+    }
+
+    @Override
+    public void onItemClick(Country country) {
+        CountryDetailActivity.start(CountryActivity.this, country.getName());
     }
 
     private void swipeToRefreshData() {
@@ -76,10 +81,5 @@ public class CountryActivity extends AppCompatActivity implements CountryListAda
                 mRcvCountry.setAdapter(adapter);
             }
         });
-    }
-
-    @Override
-    public void onItemClick(Country country) {
-        CountryDetailActivity.start(CountryActivity.this, country.getName());
     }
 }

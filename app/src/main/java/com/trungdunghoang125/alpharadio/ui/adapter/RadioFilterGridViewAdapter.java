@@ -2,7 +2,6 @@ package com.trungdunghoang125.alpharadio.ui.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,11 +36,8 @@ public class RadioFilterGridViewAdapter extends ArrayAdapter<RadioFilterTypeMode
             RadioFilterTypeModel filterType = getItem(position);
             TextView filterTitle = listItemView.findViewById(R.id.text_filter_title);
             ImageView filterBackground = listItemView.findViewById(R.id.image_filter);
-
             filterTitle.setText(filterType.getRadioFilterTitle());
-
             Drawable d = listItemView.getResources().getDrawable(filterType.getRadioFilterBackground());
-            Log.d("tranle1811", "getView: " + filterType.getRadioFilterTitle());
             filterBackground.setBackground(d);
         }
 

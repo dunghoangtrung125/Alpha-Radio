@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.trungdunghoang125.alpharadio.R;
 import com.trungdunghoang125.alpharadio.data.model.Country;
+import com.trungdunghoang125.alpharadio.databinding.ItemCountryBinding;
 import com.trungdunghoang125.alpharadio.utils.Constants;
 
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
 /**
  * Created by trungdunghoang125 on 11/7/2022.
  */
-public class CountryListAdapter extends RecyclerView.Adapter<CountryListAdapter.ViewHolder> {
+public class CountryListAdapter extends RecyclerView.Adapter<CountryListAdapter.CountryViewHolder> {
 
     private List<Country> mCountryList;
 
@@ -35,16 +36,16 @@ public class CountryListAdapter extends RecyclerView.Adapter<CountryListAdapter.
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CountryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View itemView = inflater.inflate(R.layout.item_country, parent, false);
+        ItemCountryBinding binding = ItemCountryBinding.inflate(inflater, parent, false);
 
-        return new ViewHolder(itemView);
+        return new CountryViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CountryViewHolder holder, int position) {
         Country country = mCountryList.get(position);
         holder.bind(country, holder);
     }
@@ -54,7 +55,7 @@ public class CountryListAdapter extends RecyclerView.Adapter<CountryListAdapter.
         return mCountryList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class CountryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView mCountryFlag;
 
@@ -62,18 +63,18 @@ public class CountryListAdapter extends RecyclerView.Adapter<CountryListAdapter.
 
         private TextView mStationCount;
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            mCountryFlag = itemView.findViewById(R.id.image_country_flag);
-            mCountryName = itemView.findViewById(R.id.text_country_name);
-            mStationCount = itemView.findViewById(R.id.text_station_count);
+        public CountryViewHolder(@NonNull ItemCountryBinding binding) {
+            super(binding.getRoot());
+            mCountryFlag = binding.imageCountryFlag;
+            mCountryName = binding.textCountryName;
+            mStationCount = binding.textStationCount;
         }
 
-        void bind(Country country, ViewHolder holder) {
+        void bind(Country country, CountryViewHolder holder) {
             Glide.with(holder.itemView.getContext())
                     .applyDefaultRequestOptions(new RequestOptions()
                             .placeholder(R.drawable.radio_icon))
-                    .load(Constants.BASE_COUNTRY_FLAG_URL + country.getName() + ".png")
+                    .load(Constants.BASE_COUNTRY_FLAG_URL + country.getName())
                     .into(mCountryFlag);
             mCountryName.setText(country.getName());
             mStationCount.setText(country.getStationCount());
