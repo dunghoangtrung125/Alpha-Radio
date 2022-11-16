@@ -13,11 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.trungdunghoang125.alpharadio.R;
-import com.trungdunghoang125.alpharadio.data.model.Country;
+import com.trungdunghoang125.alpharadio.data.domain.Country;
 import com.trungdunghoang125.alpharadio.databinding.ItemCountryBinding;
 import com.trungdunghoang125.alpharadio.utils.Constants;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by trungdunghoang125 on 11/7/2022.
@@ -76,7 +77,13 @@ public class CountryListAdapter extends RecyclerView.Adapter<CountryListAdapter.
                             .placeholder(R.drawable.ic_radio))
                     .load(Constants.BASE_COUNTRY_FLAG_URL + country.getName())
                     .into(mCountryFlag);
-            mCountryName.setText(country.getName());
+            Locale locale = new Locale("", country.getName());
+            String countryName = locale.getDisplayCountry();
+            if (countryName.length() >= 8) {
+                mCountryName.setText(countryName.substring(0, 8) + "..");
+            } else {
+                mCountryName.setText(countryName);
+            }
             mStationCount.setText(country.getStationCount());
             setClickListener(country);
         }

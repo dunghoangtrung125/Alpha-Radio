@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.trungdunghoang125.alpharadio.data.DataManager;
-import com.trungdunghoang125.alpharadio.data.model.Country;
+import com.trungdunghoang125.alpharadio.data.model.CountryRemote;
 import com.trungdunghoang125.alpharadio.data.repository.RadioRepository;
 import com.trungdunghoang125.alpharadio.databinding.FragmentHomeBinding;
 import com.trungdunghoang125.alpharadio.ui.activity.CountryActivity;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
-    private List<Country> mCountryList = new ArrayList<>();
+    private List<CountryRemote> mCountryList = new ArrayList<>();
 
     private GridView mRadioFilterGrid;
 

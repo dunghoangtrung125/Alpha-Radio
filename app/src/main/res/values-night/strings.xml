@@ -10,4 +10,5 @@
     <string name="home">Home</string>
     <string name="country">Country</string>
     <string name="search_station_hint">Search Stations</string>
+    <string name="now_playing">Now Playing</string>
 </resources>

@@ -5,13 +5,14 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by trungdunghoang125 on 11/9/2022.
  */
-public class Country {
+
+public class CountryRemote {
     private String name;
 
     @SerializedName("stationcount")
     private String stationCount;
 
-    public Country(String name, String stationCount) {
+    public CountryRemote(String name, String stationCount) {
         this.name = name;
         this.stationCount = stationCount;
     }

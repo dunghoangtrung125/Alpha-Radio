@@ -1,7 +1,8 @@
 package com.trungdunghoang125.alpharadio.data.repository;
 
 
-import com.trungdunghoang125.alpharadio.data.model.Country;
+import com.trungdunghoang125.alpharadio.data.domain.Country;
+import com.trungdunghoang125.alpharadio.data.model.CountryRemote;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 
 import java.util.List;

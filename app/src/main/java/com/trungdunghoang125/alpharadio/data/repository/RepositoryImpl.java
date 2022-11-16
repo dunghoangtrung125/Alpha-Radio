@@ -1,6 +1,8 @@
 package com.trungdunghoang125.alpharadio.data.repository;
 
-import com.trungdunghoang125.alpharadio.data.model.Country;
+import android.util.Log;
+
+import com.trungdunghoang125.alpharadio.data.domain.Country;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 
 import java.util.List;
@@ -11,16 +13,24 @@ import java.util.List;
 public class RepositoryImpl implements RadioRepository {
 
     private final RadioDataSource.Remote remote;
+    private final RadioDataSource.Local local;
+    private final RadioDataSource.Local cache;
 
     private static RepositoryImpl instance;
 
-    public RepositoryImpl(RadioDataSource.Remote remote) {
+    public RepositoryImpl(RadioRemoteDataSource remote,
+                          RadioLocalDataSource local,
+                          RadioCacheDataSource cache) {
         this.remote = remote;
+        this.local = local;
+        this.cache = cache;
     }
 
-    public static RepositoryImpl getInstance(RadioDataSource.Remote remote) {
+    public static RepositoryImpl getInstance(RadioRemoteDataSource remote,
+                                             RadioLocalDataSource local,
+                                             RadioCacheDataSource cache) {
         if (instance == null) {
-            instance = new RepositoryImpl(remote);
+            instance = new RepositoryImpl(remote, local, cache);
         }
         return instance;
     }
@@ -28,12 +38,77 @@ public class RepositoryImpl implements RadioRepository {
     @Override
     public void getCountries(LoadCountriesCallback callback) {
         if (callback == null) return;
-        getCountriesFromRemote(callback);
+
+        cache.getCountries(new LoadCountriesCallback() {
+            @Override
+            public void onCountriesLoad(List<Country> countries) {
+                callback.onCountriesLoad(countries);
+                Log.d("tranle1811", "onMoviesLoaded: " + "load from cache");
+            }
+
+            @Override
+            public void onDataLoadFailed() {
+                getCountriesFromLocal(callback);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 
     @Override
     public void saveCountries(List<Country> countries) {
+        local.saveCountries(countries);
+    }
 
+    private void getCountriesFromRemote(LoadCountriesCallback callback) {
+        remote.getCountries(new LoadCountriesCallback() {
+            @Override
+            public void onCountriesLoad(List<Country> countries) {
+                callback.onCountriesLoad(countries);
+                Log.d("tranle1811", "onMoviesLoaded: " + "load from remote");
+                saveCountries(countries);
+                refreshCache(countries);
+            }
+
+            @Override
+            public void onDataLoadFailed() {
+                callback.onDataLoadFailed();
+            }
+
+            @Override
+            public void onError() {
+                callback.onError();
+            }
+        });
+    }
+
+    private void getCountriesFromLocal(LoadCountriesCallback callback) {
+        local.getCountries(new LoadCountriesCallback() {
+            @Override
+            public void onCountriesLoad(List<Country> countries) {
+                callback.onCountriesLoad(countries);
+                Log.d("tranle1811", "onMoviesLoaded: " + "load from local");
+                // refresh cache
+                refreshCache(countries);
+            }
+
+            @Override
+            public void onDataLoadFailed() {
+                getCountriesFromRemote(callback);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+    }
+
+    private void refreshCache(List<Country> countries) {
+        cache.saveCountries(countries);
     }
 
     @Override
@@ -64,24 +139,5 @@ public class RepositoryImpl implements RadioRepository {
     @Override
     public void saveStations(List<RadioStation> stations) {
 
-    }
-
-    private void getCountriesFromRemote(LoadCountriesCallback callback) {
-        remote.getCountries(new LoadCountriesCallback() {
-            @Override
-            public void onCountriesLoad(List<Country> countries) {
-                callback.onCountriesLoad(countries);
-            }
-
-            @Override
-            public void onDataLoadFailed() {
-                callback.onDataLoadFailed();
-            }
-
-            @Override
-            public void onError() {
-                callback.onError();
-            }
-        });
     }
 }

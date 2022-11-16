@@ -1,6 +1,6 @@
 package com.trungdunghoang125.alpharadio.data.remote;
 
-import com.trungdunghoang125.alpharadio.data.model.Country;
+import com.trungdunghoang125.alpharadio.data.model.CountryRemote;
 import com.trungdunghoang125.alpharadio.data.model.Language;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 import com.trungdunghoang125.alpharadio.utils.Constants;
@@ -22,7 +22,7 @@ public interface RadioBrowserApi {
             "X-RapidAPI-Host: " + Constants.X_RAPIDAPI_HOST
     })
     @GET("countrycodes")
-    Call<List<Country>> getCountries(
+    Call<List<CountryRemote>> getCountries(
             @Query("reverse") boolean reverse,
             @Query("hidebroken") boolean hidebroken
     );

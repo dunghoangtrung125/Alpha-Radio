@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.trungdunghoang125.alpharadio.data.DataManager;
-import com.trungdunghoang125.alpharadio.data.model.Country;
+import com.trungdunghoang125.alpharadio.data.domain.Country;
 import com.trungdunghoang125.alpharadio.data.repository.RadioRepository;
 import com.trungdunghoang125.alpharadio.databinding.ActivityCountryBinding;
 import com.trungdunghoang125.alpharadio.ui.adapter.CountryListAdapter;

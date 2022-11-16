@@ -3,10 +3,13 @@ package com.trungdunghoang125.alpharadio.data.repository;
 
 import android.util.Log;
 
-import com.trungdunghoang125.alpharadio.data.model.Country;
+import com.trungdunghoang125.alpharadio.data.domain.Country;
+import com.trungdunghoang125.alpharadio.data.mapper.CountryMapper;
+import com.trungdunghoang125.alpharadio.data.model.CountryRemote;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 import com.trungdunghoang125.alpharadio.data.remote.RadioBrowserApi;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -35,19 +38,24 @@ public class RadioRemoteDataSource implements RadioDataSource.Remote {
 
     @Override
     public void getCountries(RadioRepository.LoadCountriesCallback callback) {
-        api.getCountries(false, false).enqueue(new Callback<List<Country>>() {
+        api.getCountries(false, false).enqueue(new Callback<List<CountryRemote>>() {
             @Override
-            public void onResponse(Call<List<Country>> call, Response<List<Country>> response) {
-                List<Country> countries = response.body();
+            public void onResponse(Call<List<CountryRemote>> call, Response<List<CountryRemote>> response) {
+                List<CountryRemote> countries = response.body();
                 if (countries != null && !countries.isEmpty()) {
-                    callback.onCountriesLoad(countries);
+                    List<Country> countriesDomain = new ArrayList<>();
+                    for (int i = 0; i < countries.size(); i++) {
+                        countriesDomain.add(CountryMapper.toDomain(i, countries.get(i)));
+                    }
+
+                    callback.onCountriesLoad(countriesDomain);
                 } else {
                     callback.onDataLoadFailed();
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Country>> call, Throwable t) {
+            public void onFailure(Call<List<CountryRemote>> call, Throwable t) {
                 callback.onError();
             }
         });

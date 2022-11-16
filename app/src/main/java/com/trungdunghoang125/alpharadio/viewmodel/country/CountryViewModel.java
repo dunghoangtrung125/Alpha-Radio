@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.trungdunghoang125.alpharadio.data.model.Country;
+import com.trungdunghoang125.alpharadio.data.domain.Country;
 import com.trungdunghoang125.alpharadio.data.repository.RadioRepository;
 
 import java.util.List;
