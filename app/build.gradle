@@ -56,4 +56,9 @@ dependencies {
     // Room database
     implementation "androidx.room:room-runtime:2.4.3"
     annotationProcessor "androidx.room:room-compiler:2.4.3"
+    // Media
+    implementation "androidx.media:media:1.6.0"
+    // ExoPlayer
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.1'
+    implementation 'com.google.android.exoplayer:extension-mediasession:2.18.1'
 }

@@ -3,6 +3,7 @@ package com.trungdunghoang125.alpharadio.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.trungdunghoang125.alpharadio.R;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 import com.trungdunghoang125.alpharadio.databinding.ActivityRadioPlayerBinding;
+import com.trungdunghoang125.alpharadio.service.RadioPlayerService;
 
 public class RadioPlayerActivity extends AppCompatActivity {
 
@@ -47,23 +49,30 @@ public class RadioPlayerActivity extends AppCompatActivity {
         mRadioPlayerTag = binding.textRadioPlayerTags;
 
         mImageHidePlayer.setOnClickListener(view -> {
+            Intent intent = new Intent(this, RadioPlayerService.class);
+            stopService(intent);
             finish();
         });
 
+        // Get intent object data
+        Intent stationDataIntent = getIntent();
+        RadioStation station = (RadioStation) stationDataIntent.getParcelableExtra(RADIO_STATION_EXTRA);
+        setDataForPlayerScreen(station);
+
         play = true;
+        Intent serviceIntent = new Intent(this, RadioPlayerService.class);
         buttonPlayPause.setOnClickListener(view -> {
             if (!play) {
                 buttonPlayPause.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_pause));
                 play = true;
+                serviceIntent.putExtra("url_radio", station.getUrl());
+                startService(serviceIntent);
             } else {
                 buttonPlayPause.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_play));
                 play = false;
+                stopService(serviceIntent);
             }
         });
-
-        // Get intent object data
-        RadioStation station = (RadioStation) getIntent().getParcelableExtra(RADIO_STATION_EXTRA);
-        setDataForPlayerScreen(station);
     }
 
     private void setDataForPlayerScreen(RadioStation station) {

@@ -32,28 +32,28 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <LinearLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_to_refresh_country"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_0"
-        android:layout_weight="7"
-        android:background="@drawable/background_layout"
-        android:gravity="center">
+        android:layout_gravity="center"
+        android:layout_weight="7">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_to_refresh_country"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dimen_8">
+            android:background="@drawable/background_layout">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_country_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_8"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:spanCount="4" />
 
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </LinearLayout>
 
-    </LinearLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

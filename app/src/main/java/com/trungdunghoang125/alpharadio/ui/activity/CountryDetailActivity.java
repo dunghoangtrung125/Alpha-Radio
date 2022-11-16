@@ -66,7 +66,6 @@ public class CountryDetailActivity extends AppCompatActivity implements RadioSta
     private void observerStationDataChange() {
         viewModel.getStationsLiveData().observe(this, stations -> {
             for (RadioStation station : stations) {
-                Log.d("tranle1811", "onChanged: " + station.getName() + " " + station.getUrl());
                 RadioStationAdapter adapter = new RadioStationAdapter(CountryDetailActivity.this);
                 adapter.setStationList(stations);
                 mRcvStationList.setAdapter(adapter);
