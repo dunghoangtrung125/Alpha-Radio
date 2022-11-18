@@ -1,8 +1,6 @@
 package com.trungdunghoang125.alpharadio.data.repository;
 
 
-import android.util.Log;
-
 import com.trungdunghoang125.alpharadio.data.domain.Country;
 import com.trungdunghoang125.alpharadio.data.mapper.CountryMapper;
 import com.trungdunghoang125.alpharadio.data.model.CountryRemote;
@@ -47,7 +45,6 @@ public class RadioRemoteDataSource implements RadioDataSource.Remote {
                     for (int i = 0; i < countries.size(); i++) {
                         countriesDomain.add(CountryMapper.toDomain(i, countries.get(i)));
                     }
-
                     callback.onCountriesLoad(countriesDomain);
                 } else {
                     callback.onDataLoadFailed();
@@ -63,7 +60,6 @@ public class RadioRemoteDataSource implements RadioDataSource.Remote {
 
     @Override
     public void getCountryRadioStation(RadioRepository.LoadStationsCallback callback, String countryCode) {
-        Log.d("tranle1811", "getCountryRadioStation: " + countryCode);
         api.getCountryRadioStation(countryCode, false, 0, 100000, false)
                 .enqueue(new Callback<List<RadioStation>>() {
                     @Override

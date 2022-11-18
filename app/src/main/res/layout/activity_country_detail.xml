@@ -36,7 +36,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/background_layout">
+            android:background="@drawable/background_layout"
+            android:orientation="vertical">
+
+            <ProgressBar
+                android:id="@+id/progress_bar_country_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_station_list"

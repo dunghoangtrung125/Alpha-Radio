@@ -63,14 +63,25 @@ public class RepositoryImpl implements RadioRepository {
         local.saveCountries(countries);
     }
 
+    @Override
+    public void getStations(LoadStationsCallback callback, String countryCode) {
+        if (callback == null) return;
+        getStationsFromRemote(callback, countryCode);
+    }
+
+    @Override
+    public void saveStations(List<RadioStation> stations) {
+
+    }
+
     private void getCountriesFromRemote(LoadCountriesCallback callback) {
         remote.getCountries(new LoadCountriesCallback() {
             @Override
             public void onCountriesLoad(List<Country> countries) {
                 callback.onCountriesLoad(countries);
                 Log.d("tranle1811", "onMoviesLoaded: " + "load from remote");
+                refreshCountriesCache(countries);
                 saveCountries(countries);
-                refreshCache(countries);
             }
 
             @Override
@@ -91,8 +102,8 @@ public class RepositoryImpl implements RadioRepository {
             public void onCountriesLoad(List<Country> countries) {
                 callback.onCountriesLoad(countries);
                 Log.d("tranle1811", "onMoviesLoaded: " + "load from local");
-                // refresh cache
-                refreshCache(countries);
+                // refresh countries cache
+                refreshCountriesCache(countries);
             }
 
             @Override
@@ -107,14 +118,8 @@ public class RepositoryImpl implements RadioRepository {
         });
     }
 
-    private void refreshCache(List<Country> countries) {
+    private void refreshCountriesCache(List<Country> countries) {
         cache.saveCountries(countries);
-    }
-
-    @Override
-    public void getStations(LoadStationsCallback callback, String countryCode) {
-        if (callback == null) return;
-        getStationsFromRemote(callback, countryCode);
     }
 
     private void getStationsFromRemote(LoadStationsCallback callback, String countryCode) {
@@ -122,6 +127,7 @@ public class RepositoryImpl implements RadioRepository {
             @Override
             public void onStationsLoad(List<RadioStation> stations) {
                 callback.onStationsLoad(stations);
+                refreshStationsCache(stations);
             }
 
             @Override
@@ -136,8 +142,7 @@ public class RepositoryImpl implements RadioRepository {
         }, countryCode);
     }
 
-    @Override
-    public void saveStations(List<RadioStation> stations) {
-
+    private void refreshStationsCache(List<RadioStation> stations) {
+        cache.saveStations(stations);
     }
 }

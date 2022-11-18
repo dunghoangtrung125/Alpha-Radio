@@ -3,9 +3,11 @@ package com.trungdunghoang125.alpharadio.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -26,6 +28,8 @@ public class CountryDetailActivity extends AppCompatActivity implements RadioSta
 
     private CountryDetailViewModel viewModel;
 
+    private ProgressBar mCountryDetailProgressBar;
+
     private RecyclerView mRcvStationList;
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -39,6 +43,7 @@ public class CountryDetailActivity extends AppCompatActivity implements RadioSta
         setContentView(binding.getRoot());
         mRcvStationList = binding.rcvStationList;
         swipeRefreshLayout = binding.swipeToRefreshStation;
+        mCountryDetailProgressBar = binding.progressBarCountryDetail;
         // view model instance
         RadioRepository repository = DataManager.getInstance().getRadioRepository();
         CountryDetailViewModelFactory factory = new CountryDetailViewModelFactory(repository);
@@ -59,17 +64,30 @@ public class CountryDetailActivity extends AppCompatActivity implements RadioSta
         swipeRefreshLayout.setOnRefreshListener(() -> {
             observerStationDataChange();
             viewModel.getStations(mCountryCode);
+            swipeRefreshLayout.setProgressViewEndTarget(false, 0);
             swipeRefreshLayout.setRefreshing(false);
         });
     }
 
     private void observerStationDataChange() {
-        viewModel.getStationsLiveData().observe(this, stations -> {
-            for (RadioStation station : stations) {
-                RadioStationAdapter adapter = new RadioStationAdapter(CountryDetailActivity.this);
-                adapter.setStationList(stations);
-                mRcvStationList.setAdapter(adapter);
+        viewModel.getShowLoadingLiveData().observe(this, new Observer<Void>() {
+            @Override
+            public void onChanged(Void unused) {
+                mCountryDetailProgressBar.setVisibility(View.VISIBLE);
             }
+        });
+
+        viewModel.getHideLoadingLiveData().observe(this, new Observer<Void>() {
+            @Override
+            public void onChanged(Void unused) {
+                mCountryDetailProgressBar.setVisibility(View.GONE);
+            }
+        });
+
+        viewModel.getStationsLiveData().observe(this, stations -> {
+            RadioStationAdapter adapter = new RadioStationAdapter(CountryDetailActivity.this);
+            adapter.setStationList(stations);
+            mRcvStationList.setAdapter(adapter);
         });
     }
 

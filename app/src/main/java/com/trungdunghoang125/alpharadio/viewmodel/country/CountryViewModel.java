@@ -13,9 +13,12 @@ import java.util.List;
  * Created by trungdunghoang125 on 11/10/2022.
  */
 public class CountryViewModel extends ViewModel {
-    private final RadioRepository radioRepository;
 
     private final MutableLiveData<List<Country>> countriesLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Void> showLoadingLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Void> hideLoadingLiveData = new MutableLiveData<>();
+
+    private final RadioRepository radioRepository;
 
     private final RadioCallback radioCallback = new RadioCallback();
 
@@ -27,14 +30,35 @@ public class CountryViewModel extends ViewModel {
         return countriesLiveData;
     }
 
+    public MutableLiveData<Void> getShowLoadingLiveData() {
+        return showLoadingLiveData;
+    }
+
+    public MutableLiveData<Void> getHideLoadingLiveData() {
+        return hideLoadingLiveData;
+    }
+
     public void getCountries() {
+        setIsLoading(true);
         radioRepository.getCountries(radioCallback);
     }
 
     private void setCountriesLiveData(List<Country> countries) {
+        setIsLoading(false);
         countriesLiveData.postValue(countries);
     }
 
+    private void setIsLoading(boolean loading) {
+        if (loading) {
+            showLoadingLiveData.postValue(null);
+        } else {
+            hideLoadingLiveData.postValue(null);
+        }
+    }
+
+    /**
+     * Callback class
+     */
     private class RadioCallback implements RadioRepository.LoadCountriesCallback {
 
         @Override

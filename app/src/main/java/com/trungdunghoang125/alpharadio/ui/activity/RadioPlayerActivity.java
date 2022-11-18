@@ -1,9 +1,11 @@
 package com.trungdunghoang125.alpharadio.ui.activity;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.IBinder;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,10 +19,9 @@ import com.trungdunghoang125.alpharadio.R;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 import com.trungdunghoang125.alpharadio.databinding.ActivityRadioPlayerBinding;
 import com.trungdunghoang125.alpharadio.service.RadioPlayerService;
+import com.trungdunghoang125.alpharadio.utils.Constants;
 
-public class RadioPlayerActivity extends AppCompatActivity {
-
-    private static final String RADIO_STATION_EXTRA = "radioStationCode";
+public class RadioPlayerActivity extends AppCompatActivity implements ServiceConnection {
 
     private ActivityRadioPlayerBinding binding;
 
@@ -28,13 +29,19 @@ public class RadioPlayerActivity extends AppCompatActivity {
 
     private ImageView mImageRadioStationPlayer;
 
-    private FloatingActionButton buttonPlayPause;
+    private ImageView mButtonPrevious;
+
+    private ImageView mButtonNext;
+
+    private FloatingActionButton mButtonPlayPause;
 
     private TextView mRadioPlayerTitle;
 
     private TextView mRadioPlayerTag;
 
-    private boolean play;
+    private String urlStream = "";
+
+    private RadioPlayerService mRadioService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +51,9 @@ public class RadioPlayerActivity extends AppCompatActivity {
 
         mImageRadioStationPlayer = binding.imageRadioStationPlayer;
         mImageHidePlayer = binding.imageHidePlayer;
-        buttonPlayPause = binding.buttonPlayPause;
+        mButtonPlayPause = binding.buttonPlayPause;
+        mButtonPrevious = binding.buttonPrevious;
+        mButtonNext = binding.buttonNext;
         mRadioPlayerTitle = binding.textRadioPlayerTitle;
         mRadioPlayerTag = binding.textRadioPlayerTags;
 
@@ -56,26 +65,55 @@ public class RadioPlayerActivity extends AppCompatActivity {
 
         // Get intent object data
         Intent stationDataIntent = getIntent();
-        RadioStation station = (RadioStation) stationDataIntent.getParcelableExtra(RADIO_STATION_EXTRA);
-        setDataForPlayerScreen(station);
+        RadioStation station = stationDataIntent.getParcelableExtra(Constants.RADIO_STATION_EXTRA);
+        setMetaData(station);
+        buttonPlayPauseClickedListener();
+        // set urlStream data
+        urlStream = station.getUrl();
+    }
 
-        play = true;
-        Intent serviceIntent = new Intent(this, RadioPlayerService.class);
-        buttonPlayPause.setOnClickListener(view -> {
-            if (!play) {
-                buttonPlayPause.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_pause));
-                play = true;
-                serviceIntent.putExtra("url_radio", station.getUrl());
-                startService(serviceIntent);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = new Intent(this, RadioPlayerService.class);
+        bindService(intent, this, BIND_AUTO_CREATE);
+    }
+
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        unbindService(this);
+//    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        RadioPlayerService.ServiceBinder serviceBinder = (RadioPlayerService.ServiceBinder) service;
+        mRadioService = serviceBinder.getRadioPlayerService();
+        // play audio right after the activity start
+        if (mRadioService.isPlaying()) {
+            mRadioService.releaseExoPlayer();
+        }
+        mRadioService.initializePlayer(urlStream);
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        mRadioService = null;
+    }
+
+    private void buttonPlayPauseClickedListener() {
+        mButtonPlayPause.setOnClickListener(view -> {
+            if (!mRadioService.isPlaying()) {
+                mButtonPlayPause.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_pause));
+                mRadioService.playExoPlayer();
             } else {
-                buttonPlayPause.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_play));
-                play = false;
-                stopService(serviceIntent);
+                mButtonPlayPause.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_play));
+                mRadioService.stopExoPlayer();
             }
         });
     }
 
-    private void setDataForPlayerScreen(RadioStation station) {
+    private void setMetaData(RadioStation station) {
         Glide.with(this)
                 .applyDefaultRequestOptions(new RequestOptions()
                         .placeholder(R.drawable.ic_radio))
@@ -87,7 +125,7 @@ public class RadioPlayerActivity extends AppCompatActivity {
 
     public static void start(Context context, RadioStation station) {
         Intent starter = new Intent(context, RadioPlayerActivity.class);
-        starter.putExtra(RADIO_STATION_EXTRA, station);
+        starter.putExtra(Constants.RADIO_STATION_EXTRA, station);
         context.startActivity(starter);
     }
 }

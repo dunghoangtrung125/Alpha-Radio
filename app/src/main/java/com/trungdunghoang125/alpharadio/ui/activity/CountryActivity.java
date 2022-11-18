@@ -3,9 +3,11 @@ package com.trungdunghoang125.alpharadio.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -24,6 +26,8 @@ public class CountryActivity extends AppCompatActivity implements CountryListAda
 
     private CountryViewModel viewModel;
 
+    private ProgressBar mProgressBarCountry;
+
     private RecyclerView mRcvCountry;
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -36,13 +40,14 @@ public class CountryActivity extends AppCompatActivity implements CountryListAda
         // binding
         mRcvCountry = binding.rcvCountryList;
         swipeRefreshLayout = binding.swipeToRefreshCountry;
+        mProgressBarCountry = binding.progressBarCountry;
         // view model instance
         RadioRepository radioRepository = DataManager.getInstance().getRadioRepository();
         CountryViewModelFactory factory = new CountryViewModelFactory(radioRepository);
         viewModel = new ViewModelProvider(this, factory).get(CountryViewModel.class);
         // get Countries data
         viewModel.getCountries();
-        observerCountryData();
+        observerCountryViewModel();
         swipeToRefreshData();
     }
 
@@ -54,7 +59,8 @@ public class CountryActivity extends AppCompatActivity implements CountryListAda
     private void swipeToRefreshData() {
         swipeRefreshLayout.setOnRefreshListener(() -> {
             viewModel.getCountries();
-            observerCountryData();
+            observerCountryViewModel();
+            swipeRefreshLayout.setProgressViewEndTarget(false, 0);
             swipeRefreshLayout.setRefreshing(false);
         });
     }
@@ -64,11 +70,22 @@ public class CountryActivity extends AppCompatActivity implements CountryListAda
         context.startActivity(starter);
     }
 
-    private void observerCountryData() {
-        viewModel.getCountriesLiveData().observe(this, countries -> {
-            for (Country country : countries) {
-                Log.d("hoangdung1205", "onChanged: " + country.getName() + " " + country.getStationCount());
+    private void observerCountryViewModel() {
+        viewModel.getShowLoadingLiveData().observe(this, new Observer<Void>() {
+            @Override
+            public void onChanged(Void unused) {
+                mProgressBarCountry.setVisibility(View.VISIBLE);
             }
+        });
+
+        viewModel.getHideLoadingLiveData().observe(this, new Observer<Void>() {
+            @Override
+            public void onChanged(Void unused) {
+                mProgressBarCountry.setVisibility(View.GONE);
+            }
+        });
+
+        viewModel.getCountriesLiveData().observe(this, countries -> {
             CountryListAdapter adapter = new CountryListAdapter(countries, CountryActivity.this);
             mRcvCountry.setAdapter(adapter);
         });

@@ -2,6 +2,7 @@ package com.trungdunghoang125.alpharadio.utils;
 
 import com.trungdunghoang125.alpharadio.R;
 import com.trungdunghoang125.alpharadio.data.model.RadioFilterTypeModel;
+import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +13,8 @@ import java.util.List;
  */
 
 public final class Constants {
+
+    // data of gridview
     public static final List<RadioFilterTypeModel> sFilterList = Collections.unmodifiableList(
             new ArrayList<RadioFilterTypeModel>() {{
                 add(new RadioFilterTypeModel("By country", R.drawable.filter_item_background));
@@ -24,4 +27,5 @@ public final class Constants {
     public static final String X_RAPIDAPI_HOST = "radio-browser.p.rapidapi.com";
     // public static final String BASE_COUNTRY_FLAG_URL = "https://www.countryflagicons.com/FLAT/64/";
     public static final String BASE_COUNTRY_FLAG_URL = "https://countryflagsapi.com/png/";
+    public static final String RADIO_STATION_EXTRA = "radioStationCode";
 }

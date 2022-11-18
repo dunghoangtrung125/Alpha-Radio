@@ -6,7 +6,6 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.trungdunghoang125.alpharadio.data.domain.Country;
-import com.trungdunghoang125.alpharadio.data.model.CountryRemote;
 
 import java.util.List;
 

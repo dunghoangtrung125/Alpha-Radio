@@ -10,31 +10,41 @@ import androidx.annotation.Nullable;
 
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 
 /**
  * Created by trungdunghoang125 on 11/16/2022.
  */
 public class RadioPlayerService extends Service {
 
-    private final IBinder serviceIBinder = new ServiceBinder();
+    private final IBinder mIBinder = new ServiceBinder();
 
     private ExoPlayer player;
 
-    private boolean playWhenReady = true;
-
-    private String urlStream;
+    private PlayerNotificationManager playerNotificationManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        player = new ExoPlayer.Builder(this)
+                .build();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        super.onStartCommand(intent, flags, startId);
-        urlStream = intent.getStringExtra("url_radio");
-        initializePlayer(urlStream);
-        return START_NOT_STICKY;
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mIBinder;
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        return super.onUnbind(intent);
     }
 
     @Override
@@ -43,21 +53,33 @@ public class RadioPlayerService extends Service {
         player.release();
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return serviceIBinder;
-    }
-
-    private void initializePlayer(String url) {
-        player = new ExoPlayer.Builder(this)
-                .build();
+    public void initializePlayer(String url) {
         Uri uri = Uri.parse(url);
         MediaItem mediaItem = MediaItem.fromUri(uri);
         player.setMediaItem(mediaItem);
-
-        player.setPlayWhenReady(playWhenReady);
+        player.setPlayWhenReady(true);
         player.prepare();
+    }
+
+    public void playExoPlayer() {
+        player.setPlayWhenReady(true);
+        player.prepare();
+    }
+
+    public void stopExoPlayer() {
+        player.setPlayWhenReady(false);
+        player.stop();
+    }
+
+    public void releaseExoPlayer() {
+        player.release();
+    }
+
+    public boolean isPlaying() {
+        if (player != null) {
+            return player.getPlaybackState() == Player.STATE_READY;
+        }
+        return false;
     }
 
     public class ServiceBinder extends Binder {

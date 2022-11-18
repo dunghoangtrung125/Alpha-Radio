@@ -1,6 +1,7 @@
 package com.trungdunghoang125.alpharadio.data.repository;
 
 import com.trungdunghoang125.alpharadio.data.domain.Country;
+import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 
 import java.util.List;
 
@@ -16,5 +17,7 @@ public interface RadioDataSource {
 
     interface Local extends Remote {
         void saveCountries(List<Country> countries);
+
+        void saveStations(List<RadioStation> stations);
     }
 }

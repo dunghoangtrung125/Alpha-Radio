@@ -1,8 +1,10 @@
 package com.trungdunghoang125.alpharadio.data.repository;
 
+import android.util.Log;
 import android.util.SparseArray;
 
 import com.trungdunghoang125.alpharadio.data.domain.Country;
+import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,9 @@ public class RadioCacheDataSource implements RadioDataSource.Local {
     private static RadioCacheDataSource sInstance;
 
     private final SparseArray<Country> cachedCountries = new SparseArray<>();
+
+    // cache to store station list when call service
+    public static final SparseArray<RadioStation> cacheStations = new SparseArray<>();
 
     public static RadioCacheDataSource getsInstance() {
         if (sInstance == null) {
@@ -49,5 +54,17 @@ public class RadioCacheDataSource implements RadioDataSource.Local {
             Country country = countries.get(i);
             cachedCountries.put(i, country);
         }
+    }
+
+    @Override
+    public void saveStations(List<RadioStation> stations) {
+        cacheStations.clear();
+        new Thread(() -> {
+            for (int i = 0; i < stations.size(); i++) {
+                RadioStation station = stations.get(i);
+                cacheStations.put(i, station);
+            }
+            Log.d("tranle1811", "saveStations: " + cacheStations.size());
+        }).start();
     }
 }

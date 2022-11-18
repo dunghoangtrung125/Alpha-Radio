@@ -2,6 +2,7 @@ package com.trungdunghoang125.alpharadio.data.repository;
 
 import com.trungdunghoang125.alpharadio.data.domain.Country;
 import com.trungdunghoang125.alpharadio.data.local.country.CountryDao;
+import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 import com.trungdunghoang125.alpharadio.utils.DiskExecutor;
 
 import java.util.List;
@@ -58,5 +59,10 @@ public class RadioLocalDataSource implements RadioDataSource.Local {
             }
         };
         executor.execute(runnable);
+    }
+
+    @Override
+    public void saveStations(List<RadioStation> stations) {
+
     }
 }
