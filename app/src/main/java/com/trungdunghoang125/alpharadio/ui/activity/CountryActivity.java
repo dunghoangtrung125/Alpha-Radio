@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -65,11 +66,6 @@ public class CountryActivity extends AppCompatActivity implements CountryListAda
         });
     }
 
-    public static void start(Context context) {
-        Intent starter = new Intent(context, CountryActivity.class);
-        context.startActivity(starter);
-    }
-
     private void observerCountryViewModel() {
         viewModel.getShowLoadingLiveData().observe(this, new Observer<Void>() {
             @Override
@@ -89,5 +85,17 @@ public class CountryActivity extends AppCompatActivity implements CountryListAda
             CountryListAdapter adapter = new CountryListAdapter(countries, CountryActivity.this);
             mRcvCountry.setAdapter(adapter);
         });
+
+        viewModel.getErrorMessageLiveData().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String message) {
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public static void start(Context context) {
+        Intent starter = new Intent(context, CountryActivity.class);
+        context.startActivity(starter);
     }
 }

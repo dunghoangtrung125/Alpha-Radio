@@ -64,7 +64,6 @@ public class RadioCacheDataSource implements RadioDataSource.Local {
                 RadioStation station = stations.get(i);
                 cacheStations.put(i, station);
             }
-            Log.d("tranle1811", "saveStations: " + cacheStations.size());
         }).start();
     }
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -13,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.trungdunghoang125.alpharadio.data.DataManager;
-import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 import com.trungdunghoang125.alpharadio.data.repository.RadioRepository;
 import com.trungdunghoang125.alpharadio.databinding.ActivityCountryDetailBinding;
 import com.trungdunghoang125.alpharadio.ui.adapter.RadioStationAdapter;
@@ -56,8 +56,8 @@ public class CountryDetailActivity extends AppCompatActivity implements RadioSta
     }
 
     @Override
-    public void onItemClick(RadioStation station) {
-        RadioPlayerActivity.start(CountryDetailActivity.this, station);
+    public void onItemClick(int position) {
+        RadioPlayerActivity.start(CountryDetailActivity.this, position);
     }
 
     private void swipeToRefreshRadioStation() {
@@ -88,6 +88,13 @@ public class CountryDetailActivity extends AppCompatActivity implements RadioSta
             RadioStationAdapter adapter = new RadioStationAdapter(CountryDetailActivity.this);
             adapter.setStationList(stations);
             mRcvStationList.setAdapter(adapter);
+        });
+
+        viewModel.getErrorMessageLiveData().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String message) {
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            }
         });
     }
 

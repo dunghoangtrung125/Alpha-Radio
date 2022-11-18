@@ -41,6 +41,12 @@ public class RadioStationAdapter extends RecyclerView.Adapter<RadioStationAdapte
     public void onBindViewHolder(@NonNull StationViewHolder holder, int position) {
         RadioStation station = mStationList.get(position);
         holder.bind(station, holder);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stationItemClick.onItemClick(holder.getAbsoluteAdapterPosition());
+            }
+        });
     }
 
     @Override
@@ -53,7 +59,7 @@ public class RadioStationAdapter extends RecyclerView.Adapter<RadioStationAdapte
         notifyDataSetChanged();
     }
 
-    public class StationViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class StationViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView mImageFavicon;
 
@@ -99,22 +105,11 @@ public class RadioStationAdapter extends RecyclerView.Adapter<RadioStationAdapte
                 mTextStationCountry.setText(station.getCountry());
             }
 
-            mTextStationBitrate.setText(String.valueOf(station.getBitrate()) + "kbps");
-            setClickListener(station);
-        }
-
-        private void setClickListener(RadioStation station) {
-            itemView.setTag(station);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            stationItemClick.onItemClick((RadioStation) view.getTag());
+            mTextStationBitrate.setText(String.valueOf(station.getBitrate()) + " kbps");
         }
     }
 
     public interface StationItemClick {
-        void onItemClick(RadioStation station);
+        void onItemClick(int position);
     }
 }

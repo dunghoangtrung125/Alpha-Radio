@@ -17,6 +17,7 @@ public class CountryDetailViewModel extends ViewModel {
     private final MutableLiveData<List<RadioStation>> stationsLiveData = new MutableLiveData<>();
     private final MutableLiveData<Void> showLoadingLiveData = new MutableLiveData<>();
     private final MutableLiveData<Void> hideLoadingLiveData = new MutableLiveData<>();
+    private final MutableLiveData<String> errorMessageLiveData = new MutableLiveData<>();
 
     private final RadioRepository repository;
 
@@ -36,6 +37,10 @@ public class CountryDetailViewModel extends ViewModel {
 
     public MutableLiveData<Void> getHideLoadingLiveData() {
         return hideLoadingLiveData;
+    }
+
+    public MutableLiveData<String> getErrorMessageLiveData() {
+        return errorMessageLiveData;
     }
 
     public void getStations(String countryCode) {
@@ -68,12 +73,12 @@ public class CountryDetailViewModel extends ViewModel {
 
         @Override
         public void onDataLoadFailed() {
-
+            errorMessageLiveData.postValue("Can not load any item. Try again!");
         }
 
         @Override
         public void onError() {
-
+            errorMessageLiveData.postValue("Something went wrong!");
         }
     }
 }
