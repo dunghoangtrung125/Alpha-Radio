@@ -41,8 +41,6 @@ public class RadioPlayerActivity extends AppCompatActivity implements ServiceCon
 
     private TextView mRadioPlayerTag;
 
-    private String urlStream = "";
-
     private RadioPlayerService mRadioService;
 
     private int position;
@@ -62,8 +60,8 @@ public class RadioPlayerActivity extends AppCompatActivity implements ServiceCon
         mRadioPlayerTag = binding.textRadioPlayerTags;
 
         mButtonHidePlayer.setOnClickListener(view -> {
-//            Intent intent = new Intent(this, RadioPlayerService.class);
-//            stopService(intent);
+            Intent intent = new Intent(this, RadioPlayerService.class);
+            stopService(intent);
             finish();
         });
 
@@ -73,8 +71,6 @@ public class RadioPlayerActivity extends AppCompatActivity implements ServiceCon
         RadioStation station = RadioCacheDataSource.cacheStations.get(position);
         setMetaData(station);
         buttonPlayPauseClickedListener();
-        // set urlStream data
-        urlStream = station.getUrl();
         // set click listener for previous button
         buttonPreviousClicked();
         buttonNextClicked();
@@ -85,12 +81,11 @@ public class RadioPlayerActivity extends AppCompatActivity implements ServiceCon
             if (position > 0) {
                 position--;
                 RadioStation station = RadioCacheDataSource.cacheStations.get(position);
-                urlStream = station.getUrl();
                 setMetaData(station);
                 if (mRadioService.isPlaying()) {
                     mRadioService.stopExoPlayer();
                 }
-                mRadioService.initializePlayer(urlStream);
+                mRadioService.getCurrentStation(position);
             } else {
                 Toast.makeText(getApplicationContext(), "Can not play previous", Toast.LENGTH_SHORT).show();
             }
@@ -102,12 +97,11 @@ public class RadioPlayerActivity extends AppCompatActivity implements ServiceCon
             if (position < RadioCacheDataSource.cacheStations.size() - 1) {
                 position++;
                 RadioStation station = RadioCacheDataSource.cacheStations.get(position);
-                urlStream = station.getUrl();
                 setMetaData(station);
                 if (mRadioService.isPlaying()) {
                     mRadioService.stopExoPlayer();
                 }
-                mRadioService.initializePlayer(urlStream);
+                mRadioService.getCurrentStation(position);
             } else {
                 Toast.makeText(getApplicationContext(), "Can not play next", Toast.LENGTH_SHORT).show();
             }
@@ -135,7 +129,7 @@ public class RadioPlayerActivity extends AppCompatActivity implements ServiceCon
         if (mRadioService.isPlaying()) {
             mRadioService.releaseExoPlayer();
         }
-        mRadioService.initializePlayer(urlStream);
+        mRadioService.getCurrentStation(position);
     }
 
     @Override

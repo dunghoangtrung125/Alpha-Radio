@@ -73,7 +73,7 @@ public class CountryViewModel extends ViewModel {
 
         @Override
         public void onDataLoadFailed() {
-            errorMessageLiveData.postValue("Can not load any item. Try again!");
+            errorMessageLiveData.postValue("Server error. Try again!");
         }
 
         @Override
