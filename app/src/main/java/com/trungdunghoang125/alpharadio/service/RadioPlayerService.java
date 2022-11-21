@@ -1,6 +1,8 @@
 package com.trungdunghoang125.alpharadio.service;
 
 import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
+import static com.trungdunghoang125.alpharadio.utils.Constants.EXO_PLAYER_PLAYER_STATUS_ACTION;
+import static com.trungdunghoang125.alpharadio.utils.Constants.STATE;
 
 import android.app.PendingIntent;
 import android.app.Service;
@@ -10,10 +12,14 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -21,6 +27,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.trungdunghoang125.alpharadio.R;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
@@ -42,10 +49,40 @@ public class RadioPlayerService extends Service {
 
     private Bitmap image = null;
 
+    private LocalBroadcastManager localBroadcast;
+
+    // MediaSession
+    private MediaSessionCompat mediaSession;
+    private MediaSessionConnector mediaSessionConnector;
+
     @Override
     public void onCreate() {
         super.onCreate();
         player = new ExoPlayer.Builder(this).build();
+        localBroadcast = LocalBroadcastManager.getInstance(this);
+
+        // MediaSession
+        mediaSession = new MediaSessionCompat(this, "sample");
+        mediaSession.setActive(true);
+        mediaSessionConnector = new MediaSessionConnector(mediaSession);
+        mediaSessionConnector.setPlayer(player);
+
+        player.addListener(new Player.Listener() {
+            @Override
+            public void onPlaybackStateChanged(int playbackState) {
+                Intent intent = new Intent(EXO_PLAYER_PLAYER_STATUS_ACTION);
+                if (playbackState == ExoPlayer.STATE_BUFFERING) {
+                    intent.putExtra(STATE, PlaybackStateCompat.STATE_BUFFERING);
+                } else {
+                    if (player.isPlaying()) {
+                        intent.putExtra(STATE, PlaybackStateCompat.STATE_PLAYING);
+                    } else {
+                        intent.putExtra(STATE, PlaybackStateCompat.STATE_PAUSED);
+                    }
+                }
+                localBroadcast.sendBroadcast(intent);
+            }
+        });
     }
 
     @Override
@@ -71,7 +108,7 @@ public class RadioPlayerService extends Service {
         playerNotificationManager.setPlayer(null);
     }
 
-    private void initializePlayer(String url) {
+    private void playRadio(String url) {
         Uri uri = Uri.parse(url);
         MediaItem mediaItem = MediaItem.fromUri(uri);
         player.setMediaItem(mediaItem);
@@ -91,7 +128,7 @@ public class RadioPlayerService extends Service {
         @Override
         public PendingIntent createCurrentContentIntent(Player player) {
             Intent intent = new Intent(getApplicationContext(), RadioPlayerActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
             return pendingIntent;
         }
 
@@ -104,21 +141,17 @@ public class RadioPlayerService extends Service {
         @Nullable
         @Override
         public Bitmap getCurrentLargeIcon(Player player, PlayerNotificationManager.BitmapCallback callback) {
-            Glide.with(getApplicationContext())
-                    .asBitmap()
-                    .load(station.getFavicon())
-                    .error(R.drawable.ic_radio)
-                    .into(new CustomTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                            image = resource;
-                        }
+            Glide.with(getApplicationContext()).asBitmap().load(station.getFavicon()).error(R.drawable.ic_radio).into(new CustomTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                    image = resource;
+                }
 
-                        @Override
-                        public void onLoadCleared(@Nullable Drawable placeholder) {
+                @Override
+                public void onLoadCleared(@Nullable Drawable placeholder) {
 
-                        }
-                    });
+                }
+            });
             return image;
         }
     };
@@ -142,6 +175,7 @@ public class RadioPlayerService extends Service {
         playerNotificationManager.setUseRewindAction(false);
         playerNotificationManager.setUseFastForwardAction(false);
         playerNotificationManager.setPlayer(player);
+        playerNotificationManager.setMediaSessionToken();
     }
 
     public void playExoPlayer() {
@@ -156,11 +190,14 @@ public class RadioPlayerService extends Service {
 
     public void releaseExoPlayer() {
         player.release();
+        if (mediaSession != null) {
+            mediaSession.release();
+        }
     }
 
     public boolean isPlaying() {
         if (player != null) {
-            return player.getPlaybackState() == Player.STATE_READY;
+            return player.isPlaying();
         }
         return false;
     }
@@ -168,7 +205,7 @@ public class RadioPlayerService extends Service {
     public void getCurrentStation(int position) {
         station = RadioCacheDataSource.cacheStations.get(position);
         String url = station.getUrl();
-        initializePlayer(url);
+        playRadio(url);
     }
 
     public class ServiceBinder extends Binder {

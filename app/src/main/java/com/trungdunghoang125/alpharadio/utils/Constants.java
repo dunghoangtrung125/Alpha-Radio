@@ -2,7 +2,6 @@ package com.trungdunghoang125.alpharadio.utils;
 
 import com.trungdunghoang125.alpharadio.R;
 import com.trungdunghoang125.alpharadio.data.model.RadioFilterTypeModel;
-import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,4 +27,7 @@ public final class Constants {
     // public static final String BASE_COUNTRY_FLAG_URL = "https://www.countryflagicons.com/FLAT/64/";
     public static final String BASE_COUNTRY_FLAG_URL = "https://countryflagsapi.com/png/";
     public static final String RADIO_STATION_EXTRA = "radioStationCode";
+
+    public static final String EXO_PLAYER_PLAYER_STATUS_ACTION = "com.example.exoplayer.PLAYER_STATUS";
+    public static final String STATE = "state";
 }

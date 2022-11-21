@@ -88,21 +88,38 @@
             android:layout_marginTop="@dimen/dimen_32"
             android:background="?android:selectableItemBackground"
             android:src="@drawable/ic_skip_previous"
-            app:layout_constraintEnd_toStartOf="@+id/button_play_pause"
+            app:layout_constraintEnd_toStartOf="@+id/frame_layout_play_pause"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_radio_player_tags" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_play_pause"
+        <FrameLayout
+            android:id="@+id/frame_layout_play_pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_pause"
             app:layout_constraintBottom_toBottomOf="@+id/button_previous"
             app:layout_constraintEnd_toStartOf="@+id/button_next"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/button_previous"
-            app:layout_constraintTop_toTopOf="@+id/button_previous" />
+            app:layout_constraintTop_toTopOf="@+id/button_previous">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/button_play_pause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:elevation="0dp"
+                android:src="@drawable/ic_pause" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar_radio_loading"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:indeterminateDrawable="@drawable/background_progress_bar"
+                android:visibility="visible" />
+
+        </FrameLayout>
 
         <ImageButton
             android:id="@+id/button_next"
@@ -112,7 +129,7 @@
             android:src="@drawable/ic_skip_next"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/button_play_pause"
+            app:layout_constraintStart_toEndOf="@+id/frame_layout_play_pause"
             app:layout_constraintTop_toTopOf="@+id/button_previous" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
