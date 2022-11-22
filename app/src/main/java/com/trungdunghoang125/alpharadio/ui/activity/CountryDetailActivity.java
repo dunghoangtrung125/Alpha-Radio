@@ -8,17 +8,21 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.trungdunghoang125.alpharadio.data.DataManager;
+import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 import com.trungdunghoang125.alpharadio.data.repository.RadioRepository;
 import com.trungdunghoang125.alpharadio.databinding.ActivityCountryDetailBinding;
 import com.trungdunghoang125.alpharadio.ui.adapter.RadioStationAdapter;
 import com.trungdunghoang125.alpharadio.viewmodel.countrydetail.CountryDetailViewModel;
 import com.trungdunghoang125.alpharadio.viewmodel.countrydetail.CountryDetailViewModelFactory;
+
+import java.util.List;
 
 public class CountryDetailActivity extends AppCompatActivity implements RadioStationAdapter.StationItemClick {
 
@@ -34,6 +38,10 @@ public class CountryDetailActivity extends AppCompatActivity implements RadioSta
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    private RadioStationAdapter adapter;
+
+    private SearchView mCountryStationListSearch;
+
     private String mCountryCode;
 
     @Override
@@ -44,20 +52,55 @@ public class CountryDetailActivity extends AppCompatActivity implements RadioSta
         mRcvStationList = binding.rcvStationList;
         swipeRefreshLayout = binding.swipeToRefreshStation;
         mCountryDetailProgressBar = binding.progressBarCountryDetail;
+        mCountryStationListSearch = binding.searchViewStation;
         // view model instance
         RadioRepository repository = DataManager.getInstance().getRadioRepository();
         CountryDetailViewModelFactory factory = new CountryDetailViewModelFactory(repository);
         viewModel = new ViewModelProvider(this, factory).get(CountryDetailViewModel.class);
         // getIntent data
         mCountryCode = getIntent().getStringExtra(INTENT_EXTRA_NAME);
+        // set data for recyclerview
+        configureRecyclerView();
         observerStationDataChange();
         viewModel.getStations(mCountryCode);
         swipeToRefreshRadioStation();
+        // search view filter list
+        filterListBySearchView();
     }
 
     @Override
     public void onItemClick(int position) {
         RadioPlayerActivity.start(CountryDetailActivity.this, position);
+    }
+
+    private void configureRecyclerView() {
+        adapter = new RadioStationAdapter(CountryDetailActivity.this);
+        mRcvStationList.setAdapter(adapter);
+    }
+
+    private void filterListBySearchView() {
+        mCountryStationListSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                viewModel.getFilter().filter(newText);
+                observerRadioFilterList();
+                return false;
+            }
+        });
+    }
+
+    private void observerRadioFilterList() {
+        viewModel.getRadioFilterLiveData().observe(this, new Observer<List<RadioStation>>() {
+            @Override
+            public void onChanged(List<RadioStation> stations) {
+                adapter.setStationList(stations);
+            }
+        });
     }
 
     private void swipeToRefreshRadioStation() {
@@ -85,9 +128,7 @@ public class CountryDetailActivity extends AppCompatActivity implements RadioSta
         });
 
         viewModel.getStationsLiveData().observe(this, stations -> {
-            RadioStationAdapter adapter = new RadioStationAdapter(CountryDetailActivity.this);
             adapter.setStationList(stations);
-            mRcvStationList.setAdapter(adapter);
         });
 
         viewModel.getErrorMessageLiveData().observe(this, new Observer<String>() {

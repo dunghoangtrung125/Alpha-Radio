@@ -51,7 +51,10 @@ public class RadioStationAdapter extends RecyclerView.Adapter<RadioStationAdapte
 
     @Override
     public int getItemCount() {
-        return mStationList.size();
+        if (mStationList != null) {
+            return mStationList.size();
+        }
+        return 0;
     }
 
     public void setStationList(List<RadioStation> mStationList) {

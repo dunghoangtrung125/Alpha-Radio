@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
@@ -25,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.bumptech.glide.Glide;
@@ -58,6 +60,10 @@ public class RadioPlayerService extends Service {
 
     private LocalBroadcastManager localBroadcast;
 
+    private PowerManager powerManager;
+
+    private PowerManager.WakeLock wakeLock;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -81,6 +87,12 @@ public class RadioPlayerService extends Service {
                 localBroadcast.sendBroadcast(intent);
             }
         });
+
+        // Keep the CPU awake to run service
+        powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                "AlphaRadio::MyWakeLockTag");
+        wakeLock.acquire();
     }
 
     @Override
@@ -103,15 +115,14 @@ public class RadioPlayerService extends Service {
     public void onDestroy() {
         super.onDestroy();
         player.release();
+        wakeLock.release();
     }
 
     private void playRadio(String url) {
-        createNotification(this, station, R.drawable.ic_pause);
         Uri uri = Uri.parse(url);
         MediaItem mediaItem = MediaItem.fromUri(uri);
         player.setMediaItem(mediaItem);
-        player.setPlayWhenReady(true);
-        player.prepare();
+        playExoPlayer();
     }
 
     public void playExoPlayer() {
@@ -150,7 +161,7 @@ public class RadioPlayerService extends Service {
     }
 
     /**
-     *  Notification
+     * Notification
      */
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
@@ -217,7 +228,7 @@ public class RadioPlayerService extends Service {
                             .setShowActionsInCompactView(0, 1, 2)
                             .setMediaSession(mediaSession.getSessionToken()))
                     .setShowWhen(false)
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
                     .build();
             notificationManagerCompat.notify(1, notification);
         }

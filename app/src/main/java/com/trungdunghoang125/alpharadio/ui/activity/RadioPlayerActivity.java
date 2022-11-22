@@ -15,7 +15,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -70,15 +69,12 @@ public class RadioPlayerActivity extends AppCompatActivity implements ServiceCon
 
             switch (action) {
                 case ACTION_PREVIOUS:
-                    Log.d("tranle1811", "onReceive: " + "previous button click");
                     buttonPreviousClicked();
                     break;
                 case ACTION_PLAY:
-                    Log.d("tranle1811", "onReceive: " + "play button click");
                     buttonPlayPauseClicked();
                     break;
                 case ACTION_NEXT:
-                    Log.d("tranle1811", "onReceive: " + "next button click");
                     buttonNextClicked();
                     break;
             }
@@ -101,8 +97,8 @@ public class RadioPlayerActivity extends AppCompatActivity implements ServiceCon
         mRadioPlayerTag = binding.textRadioPlayerTags;
 
         mButtonHidePlayer.setOnClickListener(view -> {
-            Intent intent = new Intent(this, RadioPlayerService.class);
-            stopService(intent);
+//            Intent intent = new Intent(this, RadioPlayerService.class);
+//            stopService(intent);
             finish();
         });
 
