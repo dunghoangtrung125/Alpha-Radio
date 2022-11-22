@@ -63,6 +63,7 @@
         <service
             android:name=".service.RadioPlayerService"
             android:enabled="true" />
+        <receiver android:name=".service.NotificationActionBroadcastReceiver" />
     </application>
 
 </manifest>

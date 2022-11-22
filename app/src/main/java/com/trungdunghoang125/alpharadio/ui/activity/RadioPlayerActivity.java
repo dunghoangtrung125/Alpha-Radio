@@ -1,5 +1,9 @@
 package com.trungdunghoang125.alpharadio.ui.activity;
 
+import static com.trungdunghoang125.alpharadio.service.NotificationActionBroadcastReceiver.ACTION_NAME;
+import static com.trungdunghoang125.alpharadio.service.RadioPlayerService.ACTION_NEXT;
+import static com.trungdunghoang125.alpharadio.service.RadioPlayerService.ACTION_PLAY;
+import static com.trungdunghoang125.alpharadio.service.RadioPlayerService.ACTION_PREVIOUS;
 import static com.trungdunghoang125.alpharadio.utils.Constants.STATE;
 
 import android.content.BroadcastReceiver;
@@ -11,6 +15,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -28,6 +33,7 @@ import com.trungdunghoang125.alpharadio.R;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 import com.trungdunghoang125.alpharadio.data.repository.RadioCacheDataSource;
 import com.trungdunghoang125.alpharadio.databinding.ActivityRadioPlayerBinding;
+import com.trungdunghoang125.alpharadio.service.NotificationActionBroadcastReceiver;
 import com.trungdunghoang125.alpharadio.service.RadioPlayerService;
 import com.trungdunghoang125.alpharadio.utils.Constants;
 
@@ -57,6 +63,28 @@ public class RadioPlayerActivity extends AppCompatActivity implements ServiceCon
 
     private int position;
 
+    private final BroadcastReceiver broadcastReceiverNotificationAction = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getStringExtra(ACTION_NAME);
+
+            switch (action) {
+                case ACTION_PREVIOUS:
+                    Log.d("tranle1811", "onReceive: " + "previous button click");
+                    buttonPreviousClicked();
+                    break;
+                case ACTION_PLAY:
+                    Log.d("tranle1811", "onReceive: " + "play button click");
+                    buttonPlayPauseClicked();
+                    break;
+                case ACTION_NEXT:
+                    Log.d("tranle1811", "onReceive: " + "next button click");
+                    buttonNextClicked();
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,9 +111,17 @@ public class RadioPlayerActivity extends AppCompatActivity implements ServiceCon
         position = stationDataIntent.getIntExtra(Constants.RADIO_STATION_EXTRA, 0);
         RadioStation station = RadioCacheDataSource.cacheStations.get(position);
         setMetaData(station);
-        buttonPlayPauseClicked();
-        buttonPreviousClicked();
-        buttonNextClicked();
+
+        // listener
+        mButtonPlayPause.setOnClickListener(view -> {
+            buttonPlayPauseClicked();
+        });
+        mButtonPrevious.setOnClickListener(view -> {
+            buttonPreviousClicked();
+        });
+        mButtonNext.setOnClickListener(view -> {
+            buttonNextClicked();
+        });
     }
 
     @Override
@@ -94,6 +130,8 @@ public class RadioPlayerActivity extends AppCompatActivity implements ServiceCon
         Intent intent = new Intent(this, RadioPlayerService.class);
         bindService(intent, this, BIND_AUTO_CREATE);
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter(Constants.EXO_PLAYER_PLAYER_STATUS_ACTION));
+        // register broadcast receiver for notification action
+        registerReceiver(broadcastReceiverNotificationAction, new IntentFilter(NotificationActionBroadcastReceiver.NOTIFICATION_CONTROL_ACTION));
     }
 
     @Override
@@ -113,6 +151,7 @@ public class RadioPlayerActivity extends AppCompatActivity implements ServiceCon
         if (broadcastReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         }
+        unregisterReceiver(broadcastReceiverNotificationAction);
         super.onDestroy();
     }
 
@@ -133,53 +172,43 @@ public class RadioPlayerActivity extends AppCompatActivity implements ServiceCon
     }
 
     private void buttonPlayPauseClicked() {
-        mButtonPlayPause.setOnClickListener(view -> {
-            if (!mRadioService.isPlaying()) {
-                mRadioService.playExoPlayer();
-            } else {
-                mRadioService.stopExoPlayer();
-            }
-        });
+        if (!mRadioService.isPlaying()) {
+            mRadioService.playExoPlayer();
+        } else {
+            mRadioService.stopExoPlayer();
+        }
     }
 
     private void buttonPreviousClicked() {
-        mButtonPrevious.setOnClickListener(view -> {
-            if (position > 0) {
-                position--;
-                RadioStation station = RadioCacheDataSource.cacheStations.get(position);
-                setMetaData(station);
-                if (mRadioService.isPlaying()) {
-                    mRadioService.stopExoPlayer();
-                }
-                mRadioService.getCurrentStation(position);
-            } else {
-                Toast.makeText(getApplicationContext(), "Can not play previous", Toast.LENGTH_SHORT).show();
+        if (position > 0) {
+            position--;
+            RadioStation station = RadioCacheDataSource.cacheStations.get(position);
+            setMetaData(station);
+            if (mRadioService.isPlaying()) {
+                mRadioService.stopExoPlayer();
             }
-        });
+            mRadioService.getCurrentStation(position);
+        } else {
+            Toast.makeText(getApplicationContext(), "Can not play previous", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void buttonNextClicked() {
-        mButtonNext.setOnClickListener(view -> {
-            if (position < RadioCacheDataSource.cacheStations.size() - 1) {
-                position++;
-                RadioStation station = RadioCacheDataSource.cacheStations.get(position);
-                setMetaData(station);
-                if (mRadioService.isPlaying()) {
-                    mRadioService.stopExoPlayer();
-                }
-                mRadioService.getCurrentStation(position);
-            } else {
-                Toast.makeText(getApplicationContext(), "Can not play next", Toast.LENGTH_SHORT).show();
+        if (position < RadioCacheDataSource.cacheStations.size() - 1) {
+            position++;
+            RadioStation station = RadioCacheDataSource.cacheStations.get(position);
+            setMetaData(station);
+            if (mRadioService.isPlaying()) {
+                mRadioService.stopExoPlayer();
             }
-        });
+            mRadioService.getCurrentStation(position);
+        } else {
+            Toast.makeText(getApplicationContext(), "Can not play next", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setMetaData(RadioStation station) {
-        Glide.with(this)
-                .applyDefaultRequestOptions(new RequestOptions()
-                        .placeholder(R.drawable.ic_radio))
-                .load(station.getFavicon())
-                .into(mImageRadioStationPlayer);
+        Glide.with(this).applyDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_radio)).load(station.getFavicon()).into(mImageRadioStationPlayer);
         mRadioPlayerTitle.setText(station.getName());
         mRadioPlayerTag.setText(station.getTags());
         broadcastReceiver = new BroadcastReceiver() {
