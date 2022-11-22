@@ -71,7 +71,7 @@ public class RepositoryImpl implements RadioRepository {
 
     @Override
     public void saveStations(List<RadioStation> stations) {
-
+        refreshStationsCache(stations);
     }
 
     private void getCountriesFromRemote(LoadCountriesCallback callback) {

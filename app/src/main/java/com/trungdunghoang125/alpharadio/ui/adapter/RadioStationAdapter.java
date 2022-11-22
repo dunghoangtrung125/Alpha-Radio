@@ -44,7 +44,7 @@ public class RadioStationAdapter extends RecyclerView.Adapter<RadioStationAdapte
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stationItemClick.onItemClick(holder.getAbsoluteAdapterPosition());
+                stationItemClick.onItemClick(holder.getAdapterPosition());
             }
         });
     }

@@ -15,6 +15,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -229,6 +230,7 @@ public class RadioPlayerActivity extends AppCompatActivity implements ServiceCon
     public static void start(Context context, int position) {
         Intent starter = new Intent(context, RadioPlayerActivity.class);
         starter.putExtra(Constants.RADIO_STATION_EXTRA, position);
+        Log.d("tranle1811", "start: " + position + " clicked!");
         context.startActivity(starter);
     }
 }

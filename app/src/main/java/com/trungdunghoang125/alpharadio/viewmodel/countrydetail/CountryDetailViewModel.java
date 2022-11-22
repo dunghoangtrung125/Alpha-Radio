@@ -24,6 +24,7 @@ public class CountryDetailViewModel extends ViewModel implements Filterable {
     private final MutableLiveData<Void> hideLoadingLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessageLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<RadioStation>> radioFilterLiveData = new MutableLiveData<>();
+    private List<RadioStation> resultList = new ArrayList<>();
 
     private final RadioRepository repository;
 
@@ -98,7 +99,11 @@ public class CountryDetailViewModel extends ViewModel implements Filterable {
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                radioFilterLiveData.postValue((List<RadioStation>) results.values);
+                resultList.clear();
+                resultList.addAll((List) results.values);
+                radioFilterLiveData.postValue(resultList);
+                // update stations data on cache
+                repository.saveStations(resultList);
             }
         };
     }
