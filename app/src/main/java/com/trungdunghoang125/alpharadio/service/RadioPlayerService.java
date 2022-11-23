@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,12 +22,12 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.bumptech.glide.Glide;
@@ -35,6 +36,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
+import com.google.gson.Gson;
 import com.trungdunghoang125.alpharadio.R;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 import com.trungdunghoang125.alpharadio.data.repository.RadioCacheDataSource;
@@ -47,6 +49,7 @@ public class RadioPlayerService extends Service {
     public static final String ACTION_PREVIOUS = "action-previous";
     public static final String ACTION_PLAY = "action-play";
     public static final String ACTION_NEXT = "action-next";
+    public static final String RADIO_LAST_PLAYED = "LAST_PLAYED";
 
     private static Bitmap image = BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.ic_radio);
 
@@ -56,7 +59,9 @@ public class RadioPlayerService extends Service {
 
     private ExoPlayer player;
 
-    private RadioStation station;
+    public RadioStation station = null;
+
+    MediaSessionCompat mediaSession;
 
     private LocalBroadcastManager localBroadcast;
 
@@ -70,6 +75,7 @@ public class RadioPlayerService extends Service {
         player = new ExoPlayer.Builder(this).build();
         localBroadcast = LocalBroadcastManager.getInstance(this);
         createNotificationChannel();
+        mediaSession = new MediaSessionCompat(this, "media-session");
 
         player.addListener(new Player.Listener() {
             @Override
@@ -103,11 +109,13 @@ public class RadioPlayerService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        Log.d("tranle1811", "onBind: " + "service");
         return mIBinder;
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
+        Log.d("tranle1811", "onUnbind: " + "service");
         return super.onUnbind(intent);
     }
 
@@ -116,9 +124,10 @@ public class RadioPlayerService extends Service {
         super.onDestroy();
         player.release();
         wakeLock.release();
+        Log.d("tranle1811", "Service onDestroy: ");
     }
 
-    private void playRadio(String url) {
+    public void playRadio(String url) {
         Uri uri = Uri.parse(url);
         MediaItem mediaItem = MediaItem.fromUri(uri);
         player.setMediaItem(mediaItem);
@@ -152,6 +161,21 @@ public class RadioPlayerService extends Service {
         station = RadioCacheDataSource.cacheStations.get(position);
         String url = station.getUrl();
         playRadio(url);
+        // add this station to shared preferences for using in mini player view
+        SharedPreferences.Editor editor = getSharedPreferences(RADIO_LAST_PLAYED, MODE_PRIVATE)
+                .edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(station);
+        editor.putString("Station", json);
+        editor.apply();
+    }
+
+    public void getStationDataFromPreferences() {
+        SharedPreferences preferences = getSharedPreferences(RADIO_LAST_PLAYED, MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = preferences.getString("Station", null);
+        station = gson.fromJson(json, RadioStation.class);
+        playRadio(station.getUrl());
     }
 
     public class ServiceBinder extends Binder {
@@ -179,11 +203,10 @@ public class RadioPlayerService extends Service {
         }
     }
 
-    public static void createNotification(Context context, RadioStation station, int playPauseDrawable) {
+    public void createNotification(Context context, RadioStation station, int playPauseDrawable) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-            MediaSessionCompat mediaSession = new MediaSessionCompat(context, "media-session");
 
             // set bitmap image for notification
             Glide.with(context)
@@ -228,9 +251,9 @@ public class RadioPlayerService extends Service {
                             .setShowActionsInCompactView(0, 1, 2)
                             .setMediaSession(mediaSession.getSessionToken()))
                     .setShowWhen(false)
-                    .setPriority(NotificationCompat.PRIORITY_MAX)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                     .build();
-            notificationManagerCompat.notify(1, notification);
+            startForeground(1, notification);
         }
     }
 }

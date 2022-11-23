@@ -1,10 +1,15 @@
 package com.trungdunghoang125.alpharadio.ui.activity;
 
+import static com.trungdunghoang125.alpharadio.service.RadioPlayerService.RADIO_LAST_PLAYED;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -19,11 +24,15 @@ import com.trungdunghoang125.alpharadio.ui.fragment.SearchFragment;
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private BottomNavigationView navigationView;
+    public static boolean SHOW_MINI_PLAYER = false;
+
+    private FragmentContainerView fragmentMiniPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        fragmentMiniPlayer = binding.fragmentContainerViewMiniPlayer;
         setContentView(binding.getRoot());
 
         navigationView = binding.bottomNav;
@@ -62,5 +71,19 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences preferences = getSharedPreferences(RADIO_LAST_PLAYED, MODE_PRIVATE);
+        String value = preferences.getString("Station", null);
+        if (value != null) {
+            fragmentMiniPlayer.setVisibility(View.VISIBLE);
+            SHOW_MINI_PLAYER = true;
+        } else {
+            fragmentMiniPlayer.setVisibility(View.GONE);
+            SHOW_MINI_PLAYER = false;
+        }
     }
 }

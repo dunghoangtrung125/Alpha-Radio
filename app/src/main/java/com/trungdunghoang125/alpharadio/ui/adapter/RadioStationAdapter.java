@@ -1,5 +1,6 @@
 package com.trungdunghoang125.alpharadio.ui.adapter;
 
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,11 +42,8 @@ public class RadioStationAdapter extends RecyclerView.Adapter<RadioStationAdapte
     public void onBindViewHolder(@NonNull StationViewHolder holder, int position) {
         RadioStation station = mStationList.get(position);
         holder.bind(station, holder);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stationItemClick.onItemClick(holder.getAdapterPosition());
-            }
+        holder.itemView.setOnClickListener(view -> {
+            stationItemClick.onItemClick(holder.getAbsoluteAdapterPosition());
         });
     }
 
@@ -62,7 +60,7 @@ public class RadioStationAdapter extends RecyclerView.Adapter<RadioStationAdapte
         notifyDataSetChanged();
     }
 
-    public class StationViewHolder extends RecyclerView.ViewHolder {
+    public static class StationViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView mImageFavicon;
 

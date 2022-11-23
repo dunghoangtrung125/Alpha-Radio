@@ -98,8 +98,6 @@ public class RadioPlayerActivity extends AppCompatActivity implements ServiceCon
         mRadioPlayerTag = binding.textRadioPlayerTags;
 
         mButtonHidePlayer.setOnClickListener(view -> {
-//            Intent intent = new Intent(this, RadioPlayerService.class);
-//            stopService(intent);
             finish();
         });
 
@@ -144,12 +142,24 @@ public class RadioPlayerActivity extends AppCompatActivity implements ServiceCon
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("tranle1811", "onStop: ");
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
+
+    @Override
     protected void onDestroy() {
         if (broadcastReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         }
         unregisterReceiver(broadcastReceiverNotificationAction);
         super.onDestroy();
+        Log.d("tranle1811", "onDestroy: ");
     }
 
     @Override
@@ -158,13 +168,15 @@ public class RadioPlayerActivity extends AppCompatActivity implements ServiceCon
         mRadioService = serviceBinder.getRadioPlayerService();
         // play audio right after the activity start
         if (mRadioService.isPlaying()) {
-            mRadioService.releaseExoPlayer();
+            mRadioService.stopExoPlayer();
         }
         mRadioService.getCurrentStation(position);
+        Log.d("tranle1811", "onServiceConnected: ");
     }
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
+        Log.d("tranle1811", "onServiceDisconnected: ");
         mRadioService = null;
     }
 
@@ -230,7 +242,6 @@ public class RadioPlayerActivity extends AppCompatActivity implements ServiceCon
     public static void start(Context context, int position) {
         Intent starter = new Intent(context, RadioPlayerActivity.class);
         starter.putExtra(Constants.RADIO_STATION_EXTRA, position);
-        Log.d("tranle1811", "start: " + position + " clicked!");
         context.startActivity(starter);
     }
 }

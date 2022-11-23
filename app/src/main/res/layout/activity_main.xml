@@ -15,6 +15,14 @@
         android:layout_weight="1"
         tools:layout="@layout/fragment_home" />
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_view_mini_player"
+        android:name="com.trungdunghoang125.alpharadio.ui.fragment.MiniPlayerFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:layout="@layout/fragment_mini_player" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"

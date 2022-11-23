@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/drawable_mini_player_background"
+    tools:context=".ui.fragment.MiniPlayerFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_mini_player"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp">
+
+        <ImageView
+            android:id="@+id/image_mini_player"
+            android:layout_width="@dimen/dimen_64"
+            android:layout_height="@dimen/dimen_64"
+            android:src="@drawable/ic_radio"
+            app:layout_constraintStart_toStartOf="@+id/constraint_mini_player"
+            app:layout_constraintTop_toTopOf="@+id/constraint_mini_player" />
+
+        <TextView
+            android:id="@+id/text_mini_player_station_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_16"
+            android:text="Station name"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/text_mini_player_station_country"
+            app:layout_constraintStart_toEndOf="@id/image_mini_player"
+            app:layout_constraintTop_toTopOf="@+id/constraint_mini_player" />
+
+        <TextView
+            android:id="@+id/text_mini_player_station_country"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vietnam"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/constraint_mini_player"
+            app:layout_constraintStart_toStartOf="@+id/text_mini_player_station_name"
+            app:layout_constraintTop_toBottomOf="@+id/text_mini_player_station_name" />
+
+        <ImageButton
+            android:id="@+id/button_play_mini_player"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:src="@drawable/ic_play"
+            android:layout_marginEnd="@dimen/dimen_16"
+            app:layout_constraintBottom_toBottomOf="@+id/constraint_mini_player"
+            app:layout_constraintEnd_toEndOf="@+id/constraint_mini_player"
+            app:layout_constraintTop_toTopOf="@+id/constraint_mini_player" />
+
+        <CheckBox
+            android:id="@+id/checkbox_fav_station_mini_player"
+            android:layout_width="@dimen/dimen_24"
+            android:layout_height="@dimen/dimen_24"
+            android:layout_marginEnd="@dimen/dimen_16"
+            android:background="@drawable/checkbox_selector_favorite"
+            android:button="@null"
+            app:layout_constraintBottom_toBottomOf="@+id/constraint_mini_player"
+            app:layout_constraintEnd_toStartOf="@+id/button_play_mini_player"
+            app:layout_constraintTop_toTopOf="@+id/constraint_mini_player" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
