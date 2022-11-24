@@ -1,14 +1,10 @@
 package com.trungdunghoang125.alpharadio.service;
 
-import static com.trungdunghoang125.alpharadio.utils.Constants.EXO_PLAYER_PLAYER_STATUS_ACTION;
-import static com.trungdunghoang125.alpharadio.utils.Constants.STATE;
+import static com.trungdunghoang125.alpharadio.App.CHANNEL_ID;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -21,33 +17,34 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.Player;
 import com.google.gson.Gson;
 import com.trungdunghoang125.alpharadio.R;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 import com.trungdunghoang125.alpharadio.data.repository.RadioCacheDataSource;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by trungdunghoang125 on 11/16/2022.
  */
 public class RadioPlayerService extends Service {
-    public static final String CHANNEL_ID = "channel1";
     public static final String ACTION_PREVIOUS = "action-previous";
     public static final String ACTION_PLAY = "action-play";
+    public static final String ACTION_PAUSE = "action-pause";
     public static final String ACTION_NEXT = "action-next";
     public static final String RADIO_LAST_PLAYED = "LAST_PLAYED";
 
@@ -59,11 +56,11 @@ public class RadioPlayerService extends Service {
 
     private ExoPlayer player;
 
+    private static List<RadioStation> stationList = new ArrayList<>();
+
     public RadioStation station = null;
 
-    MediaSessionCompat mediaSession;
-
-    private LocalBroadcastManager localBroadcast;
+    private int currentPosition;
 
     private PowerManager powerManager;
 
@@ -73,58 +70,44 @@ public class RadioPlayerService extends Service {
     public void onCreate() {
         super.onCreate();
         player = new ExoPlayer.Builder(this).build();
-        localBroadcast = LocalBroadcastManager.getInstance(this);
-        createNotificationChannel();
-        mediaSession = new MediaSessionCompat(this, "media-session");
-
-        player.addListener(new Player.Listener() {
-            @Override
-            public void onPlaybackStateChanged(int playbackState) {
-                Intent intent = new Intent(EXO_PLAYER_PLAYER_STATUS_ACTION);
-                if (playbackState == ExoPlayer.STATE_BUFFERING) {
-                    intent.putExtra(STATE, PlaybackStateCompat.STATE_BUFFERING);
-                } else {
-                    if (player.isPlaying()) {
-                        intent.putExtra(STATE, PlaybackStateCompat.STATE_PLAYING);
-                    } else {
-                        intent.putExtra(STATE, PlaybackStateCompat.STATE_PAUSED);
-                    }
-                }
-                localBroadcast.sendBroadcast(intent);
-            }
-        });
-
         // Keep the CPU awake to run service
         powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                 "AlphaRadio::MyWakeLockTag");
         wakeLock.acquire();
+        // Log
+        Log.d("tranle1811", "Service onCreate");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
+        Log.d("tranle1811", "Service onStartCommand");
+        return START_NOT_STICKY;
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d("tranle1811", "onBind: " + "service");
+        Log.d("tranle1811", "Service onBind");
         return mIBinder;
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        Log.d("tranle1811", "onUnbind: " + "service");
+        Log.d("tranle1811", "Service onUnbind");
         return super.onUnbind(intent);
     }
 
     @Override
     public void onDestroy() {
+        Log.d("tranle1811", "Service onDestroy");
         super.onDestroy();
         player.release();
         wakeLock.release();
-        Log.d("tranle1811", "Service onDestroy: ");
+    }
+
+    public static void getStationCache() {
+        stationList.addAll(RadioCacheDataSource.cacheStations);
     }
 
     public void playRadio(String url) {
@@ -134,20 +117,43 @@ public class RadioPlayerService extends Service {
         playExoPlayer();
     }
 
+    public void playNextRadioStation() {
+        if (currentPosition < stationList.size() - 1) {
+            currentPosition++;
+            RadioStation station = stationList.get(currentPosition);
+            if (isPlaying()) {
+                stopExoPlayer();
+            }
+            getCurrentStation(currentPosition);
+
+        } else {
+            Toast.makeText(getApplicationContext(), "Can not play next", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void playPreviousRadioStation() {
+        if (currentPosition > 0) {
+            currentPosition--;
+            RadioStation station = stationList.get(currentPosition);
+            if (isPlaying()) {
+                stopExoPlayer();
+            }
+            getCurrentStation(currentPosition);
+        } else {
+            Toast.makeText(getApplicationContext(), "Can not play previous", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void playExoPlayer() {
-        createNotification(this, station, R.drawable.ic_pause);
+        sendNotification(station, R.drawable.ic_pause);
         player.setPlayWhenReady(true);
         player.prepare();
     }
 
     public void stopExoPlayer() {
-        createNotification(this, station, R.drawable.ic_play);
+        sendNotification(station, R.drawable.ic_play);
         player.setPlayWhenReady(false);
         player.stop();
-    }
-
-    public void releaseExoPlayer() {
-        player.release();
     }
 
     public boolean isPlaying() {
@@ -158,7 +164,7 @@ public class RadioPlayerService extends Service {
     }
 
     public void getCurrentStation(int position) {
-        station = RadioCacheDataSource.cacheStations.get(position);
+        station = stationList.get(position);
         String url = station.getUrl();
         playRadio(url);
         // add this station to shared preferences for using in mini player view
@@ -185,31 +191,15 @@ public class RadioPlayerService extends Service {
     }
 
     /**
-     * Notification
+     * Notification push
      */
-    private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-    public void createNotification(Context context, RadioStation station, int playPauseDrawable) {
+    public void sendNotification(RadioStation station, int playPauseDrawable) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-
+            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+            MediaSessionCompat mediaSession = new MediaSessionCompat(this, "media-session");
             // set bitmap image for notification
-            Glide.with(context)
+            Glide.with(this)
                     .asBitmap()
                     .load(station.getFavicon())
                     .into(new CustomTarget<Bitmap>() {
@@ -220,24 +210,24 @@ public class RadioPlayerService extends Service {
 
                         @Override
                         public void onLoadCleared(@Nullable Drawable placeholder) {
-                            image = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_radio);
+                            image = BitmapFactory.decodeResource(getResources(), R.drawable.ic_radio);
                         }
                     });
 
             // pending intent
-            Intent intentPrev = new Intent(context, NotificationActionBroadcastReceiver.class)
+            Intent intentPrev = new Intent(this, RadioBroadcastReceiver.class)
                     .setAction(ACTION_PREVIOUS);
-            PendingIntent pendingIntentPrev = PendingIntent.getBroadcast(context, 0, intentPrev, PendingIntent.FLAG_IMMUTABLE);
+            PendingIntent pendingIntentPrev = PendingIntent.getBroadcast(this, 0, intentPrev, PendingIntent.FLAG_IMMUTABLE);
 
-            Intent intentPlay = new Intent(context, NotificationActionBroadcastReceiver.class)
+            Intent intentPlay = new Intent(this, RadioBroadcastReceiver.class)
                     .setAction(ACTION_PLAY);
-            PendingIntent pendingIntentPlay = PendingIntent.getBroadcast(context, 0, intentPlay, PendingIntent.FLAG_IMMUTABLE);
+            PendingIntent pendingIntentPlay = PendingIntent.getBroadcast(this, 0, intentPlay, PendingIntent.FLAG_IMMUTABLE);
 
-            Intent intentNext = new Intent(context, NotificationActionBroadcastReceiver.class)
+            Intent intentNext = new Intent(this, RadioBroadcastReceiver.class)
                     .setAction(ACTION_NEXT);
-            PendingIntent pendingIntentNext = PendingIntent.getBroadcast(context, 0, intentNext, PendingIntent.FLAG_IMMUTABLE);
+            PendingIntent pendingIntentNext = PendingIntent.getBroadcast(this, 0, intentNext, PendingIntent.FLAG_IMMUTABLE);
 
-            notification = new NotificationCompat.Builder(context, CHANNEL_ID)
+            notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_radio)
                     .setContentTitle(station.getName())
                     .setContentText(station.getCountry())
@@ -256,4 +246,9 @@ public class RadioPlayerService extends Service {
             startForeground(1, notification);
         }
     }
+
+    /**
+     ** Send data back to player activity
+     */
+
 }

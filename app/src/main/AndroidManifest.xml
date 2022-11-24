@@ -27,13 +27,6 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.activity.CountryDetailActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".ui.activity.LanguageActivity"
             android:exported="false">
             <meta-data
@@ -41,15 +34,9 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.activity.CountryActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".ui.activity.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -64,7 +51,7 @@
         <service
             android:name=".service.RadioPlayerService"
             android:enabled="true" />
-        <receiver android:name=".service.NotificationActionBroadcastReceiver" />
+        <receiver android:name=".service.RadioBroadcastReceiver" />
     </application>
 
 </manifest>

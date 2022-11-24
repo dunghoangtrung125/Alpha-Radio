@@ -17,4 +17,5 @@
     <dimen name="dimen_12">12dp</dimen>
     <dimen name="dimen_40">40dp</dimen>
     <dimen name="text_12">12sp</dimen>
+    <dimen name="dimen_128">128dp</dimen>
 </resources>

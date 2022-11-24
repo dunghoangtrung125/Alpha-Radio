@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/drawable_mini_player_background"
-    tools:context=".ui.fragment.MiniPlayerFragment">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_mini_player"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/image_mini_player"
@@ -46,9 +42,9 @@
             android:id="@+id/button_play_mini_player"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dimen_16"
             android:background="?android:selectableItemBackground"
             android:src="@drawable/ic_play"
-            android:layout_marginEnd="@dimen/dimen_16"
             app:layout_constraintBottom_toBottomOf="@+id/constraint_mini_player"
             app:layout_constraintEnd_toEndOf="@+id/constraint_mini_player"
             app:layout_constraintTop_toTopOf="@+id/constraint_mini_player" />
@@ -66,4 +62,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</FrameLayout>
+</LinearLayout>

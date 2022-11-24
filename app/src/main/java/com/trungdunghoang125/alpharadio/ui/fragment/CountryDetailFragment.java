@@ -1,34 +1,37 @@
-package com.trungdunghoang125.alpharadio.ui.activity;
+package com.trungdunghoang125.alpharadio.ui.fragment;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.trungdunghoang125.alpharadio.R;
 import com.trungdunghoang125.alpharadio.data.DataManager;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 import com.trungdunghoang125.alpharadio.data.repository.RadioRepository;
-import com.trungdunghoang125.alpharadio.databinding.ActivityCountryDetailBinding;
+import com.trungdunghoang125.alpharadio.databinding.FragmentCountryDetailBinding;
 import com.trungdunghoang125.alpharadio.ui.adapter.RadioStationAdapter;
 import com.trungdunghoang125.alpharadio.viewmodel.countrydetail.CountryDetailViewModel;
 import com.trungdunghoang125.alpharadio.viewmodel.countrydetail.CountryDetailViewModelFactory;
 
 import java.util.List;
 
-public class CountryDetailActivity extends AppCompatActivity implements RadioStationAdapter.StationItemClick {
+public class CountryDetailFragment extends Fragment implements RadioStationAdapter.StationItemClick {
 
     private static final String INTENT_EXTRA_NAME = "countryCode";
 
-    private ActivityCountryDetailBinding binding;
+    private FragmentCountryDetailBinding binding;
 
     private CountryDetailViewModel viewModel;
 
@@ -44,11 +47,15 @@ public class CountryDetailActivity extends AppCompatActivity implements RadioSta
 
     private String mCountryCode;
 
+    public CountryDetailFragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityCountryDetailBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentCountryDetailBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
         mRcvStationList = binding.rcvStationList;
         swipeRefreshLayout = binding.swipeToRefreshStation;
         mCountryDetailProgressBar = binding.progressBarCountryDetail;
@@ -58,7 +65,7 @@ public class CountryDetailActivity extends AppCompatActivity implements RadioSta
         CountryDetailViewModelFactory factory = new CountryDetailViewModelFactory(repository);
         viewModel = new ViewModelProvider(this, factory).get(CountryDetailViewModel.class);
         // getIntent data
-        mCountryCode = getIntent().getStringExtra(INTENT_EXTRA_NAME);
+        mCountryCode = getArguments().getString(INTENT_EXTRA_NAME);
         // set data for recyclerview
         configureRecyclerView();
         observerStationDataChange();
@@ -66,15 +73,17 @@ public class CountryDetailActivity extends AppCompatActivity implements RadioSta
         swipeToRefreshRadioStation();
         // search view filter list
         filterListBySearchView();
+
+        return view;
     }
 
     @Override
     public void onItemClick(int position) {
-        RadioPlayerActivity.start(CountryDetailActivity.this, position);
+        //RadioPlayerActivity.start(CountryDetailActivity.this, position);
     }
 
     private void configureRecyclerView() {
-        adapter = new RadioStationAdapter(CountryDetailActivity.this);
+        adapter = new RadioStationAdapter(CountryDetailFragment.this);
         mRcvStationList.setAdapter(adapter);
     }
 
@@ -113,35 +122,40 @@ public class CountryDetailActivity extends AppCompatActivity implements RadioSta
     }
 
     private void observerStationDataChange() {
-        viewModel.getShowLoadingLiveData().observe(this, new Observer<Void>() {
+        viewModel.getShowLoadingLiveData().observe(getViewLifecycleOwner(), new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
                 mCountryDetailProgressBar.setVisibility(View.VISIBLE);
             }
         });
 
-        viewModel.getHideLoadingLiveData().observe(this, new Observer<Void>() {
+        viewModel.getHideLoadingLiveData().observe(getViewLifecycleOwner(), new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
                 mCountryDetailProgressBar.setVisibility(View.GONE);
             }
         });
 
-        viewModel.getStationsLiveData().observe(this, stations -> {
+        viewModel.getStationsLiveData().observe(getViewLifecycleOwner(), stations -> {
             adapter.setStationList(stations);
         });
 
-        viewModel.getErrorMessageLiveData().observe(this, new Observer<String>() {
+        viewModel.getErrorMessageLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String message) {
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public static void start(Context context, String countryCode) {
-        Intent starter = new Intent(context, CountryDetailActivity.class);
-        starter.putExtra(INTENT_EXTRA_NAME, countryCode);
-        context.startActivity(starter);
+    public static void start(FragmentActivity activity, String countryCode) {
+        CountryDetailFragment countryDetailFragment = new CountryDetailFragment();
+        Bundle starter = new Bundle();
+        starter.putString(INTENT_EXTRA_NAME, countryCode);
+        countryDetailFragment.setArguments(starter);
+        FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container_view, countryDetailFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }

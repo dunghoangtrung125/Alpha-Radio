@@ -2,10 +2,8 @@ package com.trungdunghoang125.alpharadio.ui.fragment;
 
 import static android.content.Context.BIND_AUTO_CREATE;
 import static android.content.Context.MODE_PRIVATE;
-import static com.trungdunghoang125.alpharadio.service.NotificationActionBroadcastReceiver.ACTION_NAME;
-import static com.trungdunghoang125.alpharadio.service.RadioPlayerService.ACTION_NEXT;
+import static com.trungdunghoang125.alpharadio.service.RadioBroadcastReceiver.ACTION_NAME;
 import static com.trungdunghoang125.alpharadio.service.RadioPlayerService.ACTION_PLAY;
-import static com.trungdunghoang125.alpharadio.service.RadioPlayerService.ACTION_PREVIOUS;
 import static com.trungdunghoang125.alpharadio.service.RadioPlayerService.RADIO_LAST_PLAYED;
 
 import android.content.BroadcastReceiver;
@@ -20,23 +18,27 @@ import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
 import com.trungdunghoang125.alpharadio.R;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
-import com.trungdunghoang125.alpharadio.databinding.FragmentMiniPlayerBinding;
-import com.trungdunghoang125.alpharadio.service.NotificationActionBroadcastReceiver;
+import com.trungdunghoang125.alpharadio.databinding.FragmentRadioPlayerBinding;
+import com.trungdunghoang125.alpharadio.service.RadioBroadcastReceiver;
 import com.trungdunghoang125.alpharadio.service.RadioPlayerService;
 
-public class MiniPlayerFragment extends Fragment implements ServiceConnection {
-    private FragmentMiniPlayerBinding binding;
+public class RadioPlayerFragment extends Fragment implements ServiceConnection {
+    private FragmentRadioPlayerBinding binding;
 
     private ImageView mImageStation;
 
@@ -48,7 +50,17 @@ public class MiniPlayerFragment extends Fragment implements ServiceConnection {
 
     private RadioPlayerService mRadioService;
 
+    private ConstraintLayout constraintLayoutMini;
+
+    private FrameLayout layoutBottomSheet;
+
+    private BottomSheetBehavior bottomSheetBehavior;
+
+    LinearLayout radioPlayerFullScreen;
+
     private RadioStation station;
+
+    private boolean isPlay = false;
 
     private final BroadcastReceiver broadcastReceiverNotificationAction = new BroadcastReceiver() {
         @Override
@@ -56,17 +68,14 @@ public class MiniPlayerFragment extends Fragment implements ServiceConnection {
             String action = intent.getStringExtra(ACTION_NAME);
 
             switch (action) {
-                case ACTION_PREVIOUS:
-                case ACTION_NEXT:
-                    break;
                 case ACTION_PLAY:
-                    playPauseButtonClicked();
+                    //playPauseButtonClicked();
                     break;
             }
         }
     };
 
-    public MiniPlayerFragment() {
+    public RadioPlayerFragment() {
         // Required empty public constructor
     }
 
@@ -74,16 +83,37 @@ public class MiniPlayerFragment extends Fragment implements ServiceConnection {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentMiniPlayerBinding.inflate(inflater, container, false);
-        mImageStation = binding.imageMiniPlayer;
-        mTextStationTitle = binding.textMiniPlayerStationName;
-        mTextStationCountry = binding.textMiniPlayerStationCountry;
-        mButtonPlayPause = binding.buttonPlayMiniPlayer;
+        binding = FragmentRadioPlayerBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+        mImageStation = binding.layoutMiniPlayer.imageMiniPlayer;
+        mTextStationTitle = binding.layoutMiniPlayer.textMiniPlayerStationName;
+        mTextStationCountry = binding.layoutMiniPlayer.textMiniPlayerStationCountry;
+        mButtonPlayPause = binding.layoutMiniPlayer.buttonPlayMiniPlayer;
+        radioPlayerFullScreen = binding.layoutFullScreenPlayer.layoutRadioFullScreen;
+
+
+        constraintLayoutMini = binding.layoutMiniPlayer.constraintMiniPlayer;
+        layoutBottomSheet = binding.bottomNavigationContainer;
+        bottomSheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
 
         // listener for playPause button
         mButtonPlayPause.setOnClickListener(buttonView -> {
             playPauseButtonClicked();
+        });
+
+        constraintLayoutMini.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    radioPlayerFullScreen.setVisibility(View.VISIBLE);
+                    constraintLayoutMini.setAlpha(0);
+                } else {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    radioPlayerFullScreen.setVisibility(View.GONE);
+                    constraintLayoutMini.setAlpha(1);
+                }
+            }
         });
 
         return view;
@@ -94,7 +124,7 @@ public class MiniPlayerFragment extends Fragment implements ServiceConnection {
         super.onStart();
         Intent intent = new Intent(getContext(), RadioPlayerService.class);
         getContext().bindService(intent, this, BIND_AUTO_CREATE);
-        getContext().registerReceiver(broadcastReceiverNotificationAction, new IntentFilter(NotificationActionBroadcastReceiver.NOTIFICATION_CONTROL_ACTION));
+        getContext().registerReceiver(broadcastReceiverNotificationAction, new IntentFilter(RadioBroadcastReceiver.NOTIFICATION_CONTROL_ACTION));
     }
 
     @Override

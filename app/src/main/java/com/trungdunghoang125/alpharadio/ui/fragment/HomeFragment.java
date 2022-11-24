@@ -1,7 +1,6 @@
 package com.trungdunghoang125.alpharadio.ui.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import com.trungdunghoang125.alpharadio.data.DataManager;
 import com.trungdunghoang125.alpharadio.data.model.CountryRemote;
 import com.trungdunghoang125.alpharadio.data.repository.RadioRepository;
 import com.trungdunghoang125.alpharadio.databinding.FragmentHomeBinding;
-import com.trungdunghoang125.alpharadio.ui.activity.CountryActivity;
 import com.trungdunghoang125.alpharadio.ui.activity.LanguageActivity;
 import com.trungdunghoang125.alpharadio.ui.adapter.RadioFilterGridViewAdapter;
 import com.trungdunghoang125.alpharadio.utils.Constants;
@@ -43,7 +41,7 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         RadioRepository radioRepository = DataManager.getInstance().getRadioRepository();
         HomeViewModelFactory factory = new HomeViewModelFactory(radioRepository);
-        viewModel = new ViewModelProvider(getActivity(), factory).get(HomeViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity(), factory).get(HomeViewModel.class);
     }
 
     @Override
@@ -63,11 +61,10 @@ public class HomeFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        Log.d("hoangdung1205", "onItemClick: " + "item country click");
-                        CountryActivity.start(getActivity());
+                        //CountryActivity.start(getActivity());
+                        CountryFragment.start(requireActivity());
                         break;
                     case 1:
-                        Log.d("hoangdung1205", "onItemClick: " + "item language click");
                         LanguageActivity.start(getActivity());
                         break;
                 }

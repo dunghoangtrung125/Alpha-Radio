@@ -18,7 +18,7 @@ public class RadioCacheDataSource implements RadioDataSource.Local {
     private final SparseArray<Country> cachedCountries = new SparseArray<>();
 
     // cache to store station list when call service
-    public static final SparseArray<RadioStation> cacheStations = new SparseArray<>();
+    public static final List<RadioStation> cacheStations = new ArrayList<>();
 
     public static RadioCacheDataSource getsInstance() {
         if (sInstance == null) {
@@ -59,10 +59,7 @@ public class RadioCacheDataSource implements RadioDataSource.Local {
     public void saveStations(List<RadioStation> stations) {
         cacheStations.clear();
         new Thread(() -> {
-            for (int i = 0; i < stations.size(); i++) {
-                RadioStation station = stations.get(i);
-                cacheStations.put(i, station);
-            }
+            cacheStations.addAll(stations);
         }).start();
     }
 }

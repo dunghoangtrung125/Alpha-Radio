@@ -7,7 +7,7 @@ import android.content.Intent;
 /**
  * Created by trungdunghoang125 on 11/22/2022.
  */
-public class NotificationActionBroadcastReceiver extends BroadcastReceiver {
+public class RadioBroadcastReceiver extends BroadcastReceiver {
     public static final String NOTIFICATION_CONTROL_ACTION = "com.trungdunghoang125.NOTIFICATION_CONTROL";
     public static final String ACTION_NAME = "action-name";
 

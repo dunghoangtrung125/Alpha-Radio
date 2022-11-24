@@ -76,14 +76,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        SharedPreferences preferences = getSharedPreferences(RADIO_LAST_PLAYED, MODE_PRIVATE);
-        String value = preferences.getString("Station", null);
-        if (value != null) {
-            fragmentMiniPlayer.setVisibility(View.VISIBLE);
-            SHOW_MINI_PLAYER = true;
-        } else {
-            fragmentMiniPlayer.setVisibility(View.GONE);
-            SHOW_MINI_PLAYER = false;
-        }
+//        SharedPreferences preferences = getSharedPreferences(RADIO_LAST_PLAYED, MODE_PRIVATE);
+//        String value = preferences.getString("Station", null);
+//        if (value != null) {
+//            fragmentMiniPlayer.setVisibility(View.VISIBLE);
+//            SHOW_MINI_PLAYER = true;
+//        } else {
+//            fragmentMiniPlayer.setVisibility(View.GONE);
+//            SHOW_MINI_PLAYER = false;
+//        }
     }
 }
