@@ -30,4 +30,8 @@ public final class Constants {
 
     public static final String EXO_PLAYER_PLAYER_STATUS_ACTION = "com.example.exoplayer.PLAYER_STATUS";
     public static final String STATE = "state";
+
+    // const for broadcast receiver
+    public static final String NOTIFICATION_CONTROL_ACTION = "com.trungdunghoang125.NOTIFICATION_CONTROL";
+    public static final String ACTION_NAME = "action-name";
 }

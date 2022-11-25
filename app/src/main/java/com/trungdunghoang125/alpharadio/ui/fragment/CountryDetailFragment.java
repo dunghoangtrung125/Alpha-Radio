@@ -1,5 +1,6 @@
 package com.trungdunghoang125.alpharadio.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.trungdunghoang125.alpharadio.data.DataManager;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 import com.trungdunghoang125.alpharadio.data.repository.RadioRepository;
 import com.trungdunghoang125.alpharadio.databinding.FragmentCountryDetailBinding;
+import com.trungdunghoang125.alpharadio.service.RadioPlayerService;
 import com.trungdunghoang125.alpharadio.ui.adapter.RadioStationAdapter;
 import com.trungdunghoang125.alpharadio.viewmodel.countrydetail.CountryDetailViewModel;
 import com.trungdunghoang125.alpharadio.viewmodel.countrydetail.CountryDetailViewModelFactory;
@@ -30,6 +32,8 @@ import java.util.List;
 public class CountryDetailFragment extends Fragment implements RadioStationAdapter.StationItemClick {
 
     private static final String INTENT_EXTRA_NAME = "countryCode";
+
+    public static final String START_RADIO_EXTRAS = "startFromCountryDetail";
 
     private FragmentCountryDetailBinding binding;
 
@@ -79,7 +83,10 @@ public class CountryDetailFragment extends Fragment implements RadioStationAdapt
 
     @Override
     public void onItemClick(int position) {
-        //RadioPlayerActivity.start(CountryDetailActivity.this, position);
+        // Send position data click to Radio Player Fragment
+        Intent intent = new Intent(getContext(), RadioPlayerService.class);
+        intent.putExtra(START_RADIO_EXTRAS, position);
+        requireContext().startService(intent);
     }
 
     private void configureRecyclerView() {

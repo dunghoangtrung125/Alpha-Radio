@@ -13,4 +13,6 @@
     <string name="now_playing">Now Playing</string>
     <string name="channel_name">Channel 1</string>
     <string name="channel_description">Channel description ...</string>
+    <string name="search_fav_hint">Search favorite station</string>
+    <string name="search_advance_hint">What would you like to listen?</string>
 </resources>

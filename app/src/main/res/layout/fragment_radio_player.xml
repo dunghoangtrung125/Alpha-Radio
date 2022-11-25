@@ -17,7 +17,7 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <include
-            android:id="@+id/layout_full_screen_player"
+            android:id="@+id/layout_full_player"
             layout="@layout/layout_full_screen_player" />
 
         <include

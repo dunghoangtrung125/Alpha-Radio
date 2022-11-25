@@ -24,17 +24,28 @@
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_24" />
 
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view_advance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_16"
+            android:layout_marginTop="@dimen/dimen_16"
+            android:layout_marginEnd="@dimen/dimen_16"
+            android:background="@drawable/drawable_search_view"
+            app:defaultQueryHint="@string/search_advance_hint"
+            app:iconifiedByDefault="false" />
+
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_search"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="7"
+        android:layout_weight="5"
         android:background="@drawable/background_layout">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/near_me_result_list"
+            android:id="@+id/search_result_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_32"

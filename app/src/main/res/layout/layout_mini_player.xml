@@ -50,7 +50,7 @@
             app:layout_constraintTop_toTopOf="@+id/constraint_mini_player" />
 
         <CheckBox
-            android:id="@+id/checkbox_fav_station_mini_player"
+            android:id="@+id/cb_fav_station_mini_player"
             android:layout_width="@dimen/dimen_24"
             android:layout_height="@dimen/dimen_24"
             android:layout_marginEnd="@dimen/dimen_16"
