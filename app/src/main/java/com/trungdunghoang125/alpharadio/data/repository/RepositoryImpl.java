@@ -70,6 +70,12 @@ public class RepositoryImpl implements RadioRepository {
     }
 
     @Override
+    public void getSearchStationsResult(LoadStationsCallback callback, String name) {
+        if (callback == null) return;
+        getSearchResultFromRemote(callback, name);
+    }
+
+    @Override
     public void saveStations(List<RadioStation> stations) {
         refreshStationsCache(stations);
     }
@@ -140,6 +146,26 @@ public class RepositoryImpl implements RadioRepository {
                 callback.onError();
             }
         }, countryCode);
+    }
+
+    private void getSearchResultFromRemote(LoadStationsCallback callback, String name) {
+        remote.getStationSearchResult(new LoadStationsCallback() {
+            @Override
+            public void onStationsLoad(List<RadioStation> stations) {
+                callback.onStationsLoad(stations);
+                refreshStationsCache(stations);
+            }
+
+            @Override
+            public void onDataLoadFailed() {
+                callback.onDataLoadFailed();
+            }
+
+            @Override
+            public void onError() {
+                callback.onError();
+            }
+        }, name);
     }
 
     private void refreshStationsCache(List<RadioStation> stations) {

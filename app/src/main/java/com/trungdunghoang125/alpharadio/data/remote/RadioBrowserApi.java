@@ -35,7 +35,7 @@ public interface RadioBrowserApi {
     @GET("languages")
     Call<List<Language>> getLanguages();
 
-    // Get VN Radio
+    // Get Radio by country code
     @Headers({
             "X-RapidAPI-Key: " + Constants.X_RAPIDAPI_KEY,
             "X-RapidAPI-Host: " + Constants.X_RAPIDAPI_HOST
@@ -43,6 +43,20 @@ public interface RadioBrowserApi {
     @GET("stations/search")
     Call<List<RadioStation>> getCountryRadioStation(
             @Query("countrycode") String code,
+            @Query("reverse") boolean reverse,
+            @Query("offset") int offset,
+            @Query("limit") int limit,
+            @Query("hidebroken") boolean hidebroken
+    );
+
+    // Get Radio By Name
+    @Headers({
+            "X-RapidAPI-Key: " + Constants.X_RAPIDAPI_KEY,
+            "X-RapidAPI-Host: " + Constants.X_RAPIDAPI_HOST
+    })
+    @GET("stations/search")
+    Call<List<RadioStation>> getRadioByName(
+            @Query("name") String name,
             @Query("reverse") boolean reverse,
             @Query("offset") int offset,
             @Query("limit") int limit,

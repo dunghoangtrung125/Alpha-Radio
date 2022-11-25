@@ -33,5 +33,7 @@ public interface RadioRepository {
 
     void getStations(LoadStationsCallback callback, String countryCode);
 
+    void getSearchStationsResult(LoadStationsCallback callback, String name);
+
     void saveStations(List<RadioStation> stations);
 }

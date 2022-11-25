@@ -51,6 +51,11 @@ public class RadioLocalDataSource implements RadioDataSource.Local {
     }
 
     @Override
+    public void getStationSearchResult(RadioRepository.LoadStationsCallback callback, String name) {
+
+    }
+
+    @Override
     public void saveCountries(List<Country> countries) {
         Runnable runnable = new Runnable() {
             @Override

@@ -47,6 +47,11 @@ public class RadioCacheDataSource implements RadioDataSource.Local {
     }
 
     @Override
+    public void getStationSearchResult(RadioRepository.LoadStationsCallback callback, String name) {
+
+    }
+
+    @Override
     public void saveCountries(List<Country> countries) {
         cachedCountries.clear();
         for (int i = 0; i < countries.size(); i++) {

@@ -44,11 +44,22 @@
         android:layout_weight="5"
         android:background="@drawable/background_layout">
 
+        <ProgressBar
+            android:id="@+id/progress_bar_search_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_16"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@id/constraint_search"
+            app:layout_constraintStart_toStartOf="@+id/constraint_search"
+            app:layout_constraintTop_toTopOf="@+id/constraint_search" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/search_result_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_32"
-            app:layout_constraintTop_toTopOf="@+id/constraint_search" />
+            app:layout_constraintTop_toTopOf="@+id/constraint_search"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
