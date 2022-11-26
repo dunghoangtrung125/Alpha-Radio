@@ -4,7 +4,6 @@ import static com.trungdunghoang125.alpharadio.ui.fragment.CountryDetailFragment
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.trungdunghoang125.alpharadio.data.DataManager;
+import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 import com.trungdunghoang125.alpharadio.data.repository.RadioRepository;
 import com.trungdunghoang125.alpharadio.databinding.FragmentSearchBinding;
 import com.trungdunghoang125.alpharadio.service.RadioPlayerService;
@@ -73,6 +73,11 @@ public class SearchFragment extends Fragment implements RadioStationAdapter.Stat
         Intent intent = new Intent(getContext(), RadioPlayerService.class);
         intent.putExtra(START_RADIO_EXTRAS, position);
         requireContext().startService(intent);
+    }
+
+    @Override
+    public void onCheckBoxImportance(RadioStation station) {
+        viewModel.addFavStation(station);
     }
 
     private void observerDataChange() {

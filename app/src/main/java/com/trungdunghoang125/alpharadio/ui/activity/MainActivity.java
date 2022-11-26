@@ -1,7 +1,11 @@
 package com.trungdunghoang125.alpharadio.ui.activity;
 
+import static com.trungdunghoang125.alpharadio.service.RadioPlayerService.RADIO_LAST_PLAYED;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +24,6 @@ import com.trungdunghoang125.alpharadio.ui.fragment.SearchFragment;
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private BottomNavigationView navigationView;
-
     private FragmentContainerView fragmentMiniPlayer;
 
     @Override
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         fragmentMiniPlayer = binding.fragmentContainerViewMiniPlayer;
+
         setContentView(binding.getRoot());
 
         navigationView = binding.bottomNav;

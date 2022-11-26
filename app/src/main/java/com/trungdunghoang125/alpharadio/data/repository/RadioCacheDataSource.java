@@ -63,8 +63,25 @@ public class RadioCacheDataSource implements RadioDataSource.Local {
     @Override
     public void saveStations(List<RadioStation> stations) {
         cacheStations.clear();
-        new Thread(() -> {
-            cacheStations.addAll(stations);
-        }).start();
+        if (stations != null) {
+            new Thread(() -> {
+                cacheStations.addAll(stations);
+            }).start();
+        }
+    }
+
+    @Override
+    public void getFavStations(RadioRepository.LoadStationsCallback callback) {
+
+    }
+
+    @Override
+    public void addFavStation(RadioStation station) {
+
+    }
+
+    @Override
+    public void removeFavStation(RadioStation station) {
+
     }
 }

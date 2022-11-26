@@ -61,6 +61,14 @@ public class SearchViewModel extends ViewModel {
         }
     }
 
+    public void addFavStation(RadioStation station) {
+        radioRepository.addFavStation(station);
+    }
+
+    public void removeFavStation(RadioStation station) {
+        radioRepository.removeFavStation(station);
+    }
+
     /**
      * Call back inner class
      */

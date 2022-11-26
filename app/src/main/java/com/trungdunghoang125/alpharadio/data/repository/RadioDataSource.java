@@ -21,5 +21,11 @@ public interface RadioDataSource {
         void saveCountries(List<Country> countries);
 
         void saveStations(List<RadioStation> stations);
+
+        void getFavStations(RadioRepository.LoadStationsCallback callback);
+
+        void addFavStation(RadioStation station);
+
+        void removeFavStation(RadioStation station);
     }
 }

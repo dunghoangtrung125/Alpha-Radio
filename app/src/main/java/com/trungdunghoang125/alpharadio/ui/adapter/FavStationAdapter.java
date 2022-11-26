@@ -13,27 +13,26 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.trungdunghoang125.alpharadio.R;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
-import com.trungdunghoang125.alpharadio.databinding.ItemRadioStationBinding;
+import com.trungdunghoang125.alpharadio.databinding.ItemFavStationBinding;
 
 import java.util.List;
 
 /**
- * Created by trungdunghoang125 on 11/10/2022.
+ * Created by trungdunghoang125 on 11/26/2022.
  */
-public class RadioStationAdapter extends RecyclerView.Adapter<RadioStationAdapter.StationViewHolder> {
-
+public class FavStationAdapter extends RecyclerView.Adapter<FavStationAdapter.StationViewHolder> {
     private List<RadioStation> mStationList;
 
     private final StationItemClick stationItemClick;
 
-    public RadioStationAdapter(StationItemClick stationItemClick) {
+    public FavStationAdapter(StationItemClick stationItemClick) {
         this.stationItemClick = stationItemClick;
     }
 
     @NonNull
     @Override
     public StationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemRadioStationBinding binding = ItemRadioStationBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        ItemFavStationBinding binding = ItemFavStationBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new StationViewHolder(binding);
     }
 
@@ -77,14 +76,14 @@ public class RadioStationAdapter extends RecyclerView.Adapter<RadioStationAdapte
 
         private ImageButton mBtnAddFav;
 
-        public StationViewHolder(@NonNull ItemRadioStationBinding binding) {
+        public StationViewHolder(@NonNull ItemFavStationBinding binding) {
             super(binding.getRoot());
-            mImageFavicon = binding.imageFavicon;
-            mTextStationName = binding.textStationName;
-            mTextStationState = binding.textStationState;
-            mTextStationCountry = binding.textStationCountry;
-            mTextStationBitrate = binding.textStationBitrate;
-            mBtnAddFav = binding.btnAddFav;
+            mImageFavicon = binding.favImageFavicon;
+            mTextStationName = binding.textFavStationName;
+            mTextStationState = binding.textFavStationState;
+            mTextStationCountry = binding.textFavStationCountry;
+            mTextStationBitrate = binding.textFavStationBitrate;
+            mBtnAddFav = binding.btnRemoveFav;
         }
 
         public void bind(RadioStation station, StationViewHolder holder) {

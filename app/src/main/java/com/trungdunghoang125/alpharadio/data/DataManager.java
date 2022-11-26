@@ -3,6 +3,8 @@ package com.trungdunghoang125.alpharadio.data;
 import com.trungdunghoang125.alpharadio.App;
 import com.trungdunghoang125.alpharadio.data.local.country.CountryDao;
 import com.trungdunghoang125.alpharadio.data.local.country.CountryDatabase;
+import com.trungdunghoang125.alpharadio.data.local.favorite.FavStationDao;
+import com.trungdunghoang125.alpharadio.data.local.favorite.FavStationDatabase;
 import com.trungdunghoang125.alpharadio.data.remote.RadioBrowserApi;
 import com.trungdunghoang125.alpharadio.data.remote.RetrofitClient;
 import com.trungdunghoang125.alpharadio.data.repository.RadioCacheDataSource;
@@ -35,7 +37,8 @@ public class DataManager {
         RadioRemoteDataSource remoteDataSource = RadioRemoteDataSource.getInstance(radioBrowserApi);
 
         CountryDao countryDao = CountryDatabase.getInstance(App.getInstance()).countryDao();
-        RadioLocalDataSource localDataSource = RadioLocalDataSource.getInstance(countryDao);
+        FavStationDao stationDao = FavStationDatabase.getInstance(App.getInstance()).stationDao();
+        RadioLocalDataSource localDataSource = RadioLocalDataSource.getInstance(countryDao, stationDao);
         RadioCacheDataSource cacheDataSource = RadioCacheDataSource.getsInstance();
 
         return RepositoryImpl.getInstance(remoteDataSource, localDataSource, cacheDataSource);

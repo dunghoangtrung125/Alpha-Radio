@@ -80,6 +80,22 @@ public class RepositoryImpl implements RadioRepository {
         refreshStationsCache(stations);
     }
 
+    @Override
+    public void getFavStations(LoadStationsCallback callback) {
+        if (callback == null) return;
+        getFavStationsFromLocal(callback);
+    }
+
+    @Override
+    public void addFavStation(RadioStation station) {
+        local.addFavStation(station);
+    }
+
+    @Override
+    public void removeFavStation(RadioStation station) {
+        local.removeFavStation(station);
+    }
+
     private void getCountriesFromRemote(LoadCountriesCallback callback) {
         remote.getCountries(new LoadCountriesCallback() {
             @Override
@@ -115,6 +131,26 @@ public class RepositoryImpl implements RadioRepository {
             @Override
             public void onDataLoadFailed() {
                 getCountriesFromRemote(callback);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+    }
+
+    private void getFavStationsFromLocal(LoadStationsCallback callback) {
+        local.getFavStations(new LoadStationsCallback() {
+            @Override
+            public void onStationsLoad(List<RadioStation> stations) {
+                callback.onStationsLoad(stations);
+                refreshStationsCache(stations);
+            }
+
+            @Override
+            public void onDataLoadFailed() {
+
             }
 
             @Override

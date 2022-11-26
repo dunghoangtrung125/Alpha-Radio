@@ -15,4 +15,5 @@
     <string name="channel_description">Channel description ...</string>
     <string name="search_fav_hint">Search favorite station</string>
     <string name="search_advance_hint">What would you like to listen?</string>
+    <string name="empty_fav_list_message">Favorite List Empty</string>
 </resources>

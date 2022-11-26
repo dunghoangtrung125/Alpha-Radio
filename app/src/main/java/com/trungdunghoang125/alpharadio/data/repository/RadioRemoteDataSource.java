@@ -41,8 +41,8 @@ public class RadioRemoteDataSource implements RadioDataSource.Remote {
         api.getCountries(false, false).enqueue(new Callback<List<CountryRemote>>() {
             @Override
             public void onResponse(Call<List<CountryRemote>> call, Response<List<CountryRemote>> response) {
-                List<CountryRemote> countries = response.body();
-                if (countries != null && !countries.isEmpty()) {
+                if (response.code() == 200) {
+                    List<CountryRemote> countries = response.body();
                     List<Country> countriesDomain = new ArrayList<>();
                     for (int i = 0; i < countries.size(); i++) {
                         countriesDomain.add(CountryMapper.toDomain(i, countries.get(i)));
@@ -65,8 +65,8 @@ public class RadioRemoteDataSource implements RadioDataSource.Remote {
         api.getCountryRadioStation(countryCode, false, 0, 100000, false).enqueue(new Callback<List<RadioStation>>() {
             @Override
             public void onResponse(Call<List<RadioStation>> call, Response<List<RadioStation>> response) {
-                List<RadioStation> stationList = response.body();
-                if (stationList != null && !stationList.isEmpty()) {
+                if (response.code() == 200) {
+                    List<RadioStation> stationList = response.body();
                     callback.onStationsLoad(stationList);
                 } else {
                     callback.onDataLoadFailed();
@@ -82,12 +82,11 @@ public class RadioRemoteDataSource implements RadioDataSource.Remote {
 
     @Override
     public void getStationSearchResult(RadioRepository.LoadStationsCallback callback, String name) {
-        Log.d("tranle1811", "getStationSearchResult: " + name);
         api.getRadioByName(name, false, 0, 100000, false).enqueue(new Callback<List<RadioStation>>() {
             @Override
             public void onResponse(Call<List<RadioStation>> call, Response<List<RadioStation>> response) {
-                List<RadioStation> stationList = response.body();
-                if (stationList != null && !stationList.isEmpty()) {
+                if (response.code() == 200) {
+                    List<RadioStation> stationList = response.body();
                     callback.onStationsLoad(stationList);
                 } else {
                     callback.onDataLoadFailed();

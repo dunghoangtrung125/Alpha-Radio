@@ -29,8 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_16"
-            android:layout_marginEnd="@dimen/dimen_16"
             android:layout_marginTop="@dimen/dimen_16"
+            android:layout_marginEnd="@dimen/dimen_16"
             android:background="@drawable/drawable_search_view"
             app:defaultQueryHint="@string/search_fav_hint"
             app:iconifiedByDefault="false" />
@@ -45,10 +45,24 @@
         android:background="@drawable/background_layout">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/near_me_result_list"
+            android:id="@+id/rcv_favorite_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_32"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toTopOf="@+id/constraint_favorite" />
+
+        <TextView
+            android:id="@+id/text_fav_list_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_64"
+            android:text="@string/empty_fav_list_message"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/constraint_favorite"
+            app:layout_constraintStart_toStartOf="@+id/constraint_favorite"
+            app:layout_constraintTop_toTopOf="@+id/constraint_favorite" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

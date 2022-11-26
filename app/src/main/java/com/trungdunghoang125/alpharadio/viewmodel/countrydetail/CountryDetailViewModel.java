@@ -72,6 +72,14 @@ public class CountryDetailViewModel extends ViewModel implements Filterable {
         }
     }
 
+    public void addFavStation(RadioStation station) {
+        repository.addFavStation(station);
+    }
+
+    public void removeFavStation(RadioStation station) {
+        repository.removeFavStation(station);
+    }
+
     /**
      * Filter data for search view
      */

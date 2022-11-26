@@ -36,4 +36,10 @@ public interface RadioRepository {
     void getSearchStationsResult(LoadStationsCallback callback, String name);
 
     void saveStations(List<RadioStation> stations);
+
+    void getFavStations(LoadStationsCallback callback);
+
+    void addFavStation(RadioStation station);
+
+    void removeFavStation(RadioStation station);
 }

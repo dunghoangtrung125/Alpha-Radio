@@ -89,6 +89,11 @@ public class CountryDetailFragment extends Fragment implements RadioStationAdapt
         requireContext().startService(intent);
     }
 
+    @Override
+    public void onCheckBoxImportance(RadioStation station) {
+        viewModel.addFavStation(station);
+    }
+
     private void configureRecyclerView() {
         adapter = new RadioStationAdapter(CountryDetailFragment.this);
         mRcvStationList.setAdapter(adapter);

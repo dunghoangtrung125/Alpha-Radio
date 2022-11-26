@@ -3,23 +3,38 @@ package com.trungdunghoang125.alpharadio.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 /**
  * Created by trungdunghoang125 on 11/9/2022.
  */
+@Entity(tableName = "fav_stations")
 public class RadioStation implements Parcelable {
 
+    @PrimaryKey
+    @ColumnInfo(name = "name")
+    @NonNull
     private String name;
 
+    @ColumnInfo(name = "url")
     private String url;
 
+    @ColumnInfo(name = "favicon")
     private String favicon;
 
+    @ColumnInfo(name = "tags")
     private String tags;
 
+    @ColumnInfo(name = "country")
     private String country;
 
+    @ColumnInfo(name = "state")
     private String state;
 
+    @ColumnInfo(name = "bitrate")
     private int bitrate;
 
     public RadioStation(String name, String url, String favicon, String tags, String country, String state, int bitrate) {

@@ -61,6 +61,7 @@ public class CountryFragment extends Fragment implements CountryListAdapter.Coun
         observerCountryViewModel();
         swipeToRefreshData();
         // Inflate the layout for this fragment
+
         return view;
     }
 

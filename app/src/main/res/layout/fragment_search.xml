@@ -60,6 +60,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_32"
             app:layout_constraintTop_toTopOf="@+id/constraint_search"
+            android:clipToPadding="false"
+            android:paddingBottom="160dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

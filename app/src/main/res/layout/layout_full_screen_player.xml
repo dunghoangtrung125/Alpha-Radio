@@ -107,7 +107,7 @@
                 android:id="@+id/button_play_pause"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_pause"
+                android:src="@drawable/ic_play"
                 app:elevation="0dp" />
 
             <ProgressBar
@@ -117,7 +117,7 @@
                 android:layout_gravity="center"
                 android:indeterminate="true"
                 android:indeterminateDrawable="@drawable/background_progress_bar"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
         </FrameLayout>
 

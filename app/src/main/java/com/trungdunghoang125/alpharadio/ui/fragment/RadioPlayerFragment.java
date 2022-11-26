@@ -71,8 +71,6 @@ public class RadioPlayerFragment extends Fragment implements ServiceConnection {
 
     private RadioStation station;
 
-    private boolean isConnected;
-
     private boolean isPlaying;
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -107,7 +105,6 @@ public class RadioPlayerFragment extends Fragment implements ServiceConnection {
     public void onServiceConnected(ComponentName name, IBinder service) {
         RadioPlayerService.ServiceBinder serviceBinder = (RadioPlayerService.ServiceBinder) service;
         mRadioService = serviceBinder.getRadioPlayerService();
-        isConnected = true;
     }
 
     @Override
@@ -264,8 +261,8 @@ public class RadioPlayerFragment extends Fragment implements ServiceConnection {
                 .load(station.getFavicon())
                 .into(mFullPlayerStationImage);
         mFullPlayerStationTitle.setText(station.getName());
-        if (station.getTags().length() >= 20) {
-            mFullPlayerStationTag.setText(station.getTags().substring(0, 20) + "...");
+        if (station.getTags().length() >= 40) {
+            mFullPlayerStationTag.setText(station.getTags().substring(0, 40) + "...");
         } else {
             mFullPlayerStationTag.setText(station.getTags());
         }
@@ -275,14 +272,10 @@ public class RadioPlayerFragment extends Fragment implements ServiceConnection {
         setMetaData(station);
         switch (action) {
             case ACTION_PLAY:
-                setPlayPauseBtn();
-                expandedMusicPlayer();
-                break;
             case ACTION_STOP:
                 setPlayPauseBtn();
                 break;
             case ACTION_NEXT:
-                break;
             case ACTION_PREVIOUS:
                 break;
         }
@@ -292,7 +285,6 @@ public class RadioPlayerFragment extends Fragment implements ServiceConnection {
         if (isPlaying) {
             mMiniPlayerBtnPlayPause.setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_pause));
             mFullPlayerBtnPlayPause.setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_pause));
-            mFullPlayerLoading.setVisibility(View.GONE);
         } else {
             mMiniPlayerBtnPlayPause.setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_play));
             mFullPlayerBtnPlayPause.setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_play));
