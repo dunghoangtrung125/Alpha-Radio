@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -39,6 +40,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.trungdunghoang125.alpharadio.R;
 import com.trungdunghoang125.alpharadio.data.DataManager;
@@ -46,6 +48,7 @@ import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 import com.trungdunghoang125.alpharadio.data.repository.RadioRepository;
 import com.trungdunghoang125.alpharadio.databinding.FragmentRadioPlayerBinding;
 import com.trungdunghoang125.alpharadio.service.RadioPlayerService;
+import com.trungdunghoang125.alpharadio.service.SleepTimer;
 import com.trungdunghoang125.alpharadio.viewmodel.radioplayer.RadioPlayerViewModel;
 import com.trungdunghoang125.alpharadio.viewmodel.radioplayer.RadioPlayerViewModelFactory;
 
@@ -59,7 +62,7 @@ public class RadioPlayerFragment extends Fragment implements ServiceConnection {
 
     private TextView mMiniPlayerStationTitle, mMiniPlayerStationCountry, mFullPlayerStationTitle, mFullPlayerStationTag;
 
-    private ImageButton mMiniPlayerBtnPlayPause, mFullPlayerBtnPlayPause, mFullPlayerBtnNext, mFullPlayerBtnPrevious;
+    private ImageButton mMiniPlayerBtnPlayPause, mFullPlayerBtnPlayPause, mFullPlayerBtnNext, mFullPlayerBtnPrevious, mMiniPlayerBtnAddFav, mFullPlayerBtnAddFav, mFullPlayerBtnTimer;
 
     private ProgressBar mFullPlayerLoading;
 
@@ -70,8 +73,6 @@ public class RadioPlayerFragment extends Fragment implements ServiceConnection {
     private BottomSheetBehavior mBottomSheetBehavior;
 
     private LinearLayout mLayoutFullScreenPlayer;
-
-    private ImageButton mMiniPlayerBtnAddFav;
 
     private RadioPlayerService mRadioService;
 
@@ -144,6 +145,8 @@ public class RadioPlayerFragment extends Fragment implements ServiceConnection {
         mFullPlayerStationTag = binding.layoutFullPlayer.textRadioPlayerTags;
         mFullPlayerStationImage = binding.layoutFullPlayer.imageRadioStationPlayer;
         mFullPlayerLoading = binding.layoutFullPlayer.progressBarRadioLoading;
+        mFullPlayerBtnAddFav = binding.layoutFullPlayer.btnAddFavFullPlayer;
+        mFullPlayerBtnTimer = binding.layoutFullPlayer.btnTimerClock;
 
         // view model instance
         RadioRepository repository = DataManager.getInstance().getRadioRepository();
@@ -182,7 +185,59 @@ public class RadioPlayerFragment extends Fragment implements ServiceConnection {
 
         addFavStationBtnClicked();
 
+        mFullPlayerBtnTimer.setOnClickListener(buttonView -> {
+            showTimerBottomDialog();
+        });
+
         return binding.getRoot();
+    }
+
+    private void showTimerBottomDialog() {
+        BottomSheetDialog timerDialog = new BottomSheetDialog(getContext());
+        timerDialog.setContentView(R.layout.layout_timer_dialog);
+        timerDialog.show();
+
+        timerDialog.findViewById(R.id.tv_5mins).setOnClickListener(view -> {
+            Toast.makeText(getContext(), "Radio will stop after 5 mins", Toast.LENGTH_SHORT).show();
+            SleepTimer.createSleepTimer(getContext(), 1);
+            timerDialog.dismiss();
+        });
+
+        timerDialog.findViewById(R.id.tv_10mins).setOnClickListener(view -> {
+            Toast.makeText(getContext(), "Radio will stop after 10 mins", Toast.LENGTH_SHORT).show();
+            SleepTimer.createSleepTimer(getContext(), 10);
+            timerDialog.dismiss();
+        });
+
+        timerDialog.findViewById(R.id.tv_15mins).setOnClickListener(view -> {
+            Toast.makeText(getContext(), "Radio will stop after 15 mins", Toast.LENGTH_SHORT).show();
+            SleepTimer.createSleepTimer(getContext(), 15);
+            timerDialog.dismiss();
+        });
+
+        timerDialog.findViewById(R.id.tv_30mins).setOnClickListener(view -> {
+            Toast.makeText(getContext(), "Radio will stop after 30 mins", Toast.LENGTH_SHORT).show();
+            SleepTimer.createSleepTimer(getContext(), 30);
+            timerDialog.dismiss();
+        });
+
+        timerDialog.findViewById(R.id.tv_45mins).setOnClickListener(view -> {
+            Toast.makeText(getContext(), "Radio will stop after 45 mins", Toast.LENGTH_SHORT).show();
+            SleepTimer.createSleepTimer(getContext(), 45);
+            timerDialog.dismiss();
+        });
+
+        timerDialog.findViewById(R.id.tv_1hour).setOnClickListener(view -> {
+            Toast.makeText(getContext(), "Radio will stop after 1 hour", Toast.LENGTH_SHORT).show();
+            SleepTimer.createSleepTimer(getContext(), 60);
+            timerDialog.dismiss();
+        });
+
+        timerDialog.findViewById(R.id.tv_turn_off_timer).setOnClickListener(view -> {
+            Toast.makeText(getContext(), "Sleep Timer Cancel", Toast.LENGTH_SHORT).show();
+            SleepTimer.cancelSleepTimer(getContext());
+            timerDialog.dismiss();
+        });
     }
 
     @Override
@@ -242,6 +297,10 @@ public class RadioPlayerFragment extends Fragment implements ServiceConnection {
 
     private void addFavStationBtnClicked() {
         mMiniPlayerBtnAddFav.setOnClickListener(view -> {
+            viewModel.addFavStation(station);
+        });
+
+        mFullPlayerBtnAddFav.setOnClickListener(view -> {
             viewModel.addFavStation(station);
         });
     }

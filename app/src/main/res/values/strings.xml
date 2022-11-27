@@ -16,4 +16,12 @@
     <string name="search_fav_hint">Search favorite station</string>
     <string name="search_advance_hint">What would you like to listen?</string>
     <string name="empty_fav_list_message">Favorite List Empty</string>
+    <string name="sleep_timer">Sleep Timer</string>
+    <string name="five_mins">5 minutes</string>
+    <string name="_10_minutes">10 minutes</string>
+    <string name="_15_minutes">15 minutes</string>
+    <string name="_30_minutes">30 minutes</string>
+    <string name="_45_minutes">45 minutes</string>
+    <string name="_1_hour">1 hour</string>
+    <string name="turn_off_timer">Turn off timer</string>
 </resources>

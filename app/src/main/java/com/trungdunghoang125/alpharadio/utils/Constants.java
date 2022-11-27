@@ -34,4 +34,6 @@ public final class Constants {
     // const for broadcast receiver
     public static final String NOTIFICATION_CONTROL_ACTION = "com.trungdunghoang125.NOTIFICATION_CONTROL";
     public static final String ACTION_NAME = "action-name";
+
+    public static final int SLEEP_TIMER_REQUEST_CODE = 1811;
 }

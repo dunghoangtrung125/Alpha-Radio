@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ProgressBar;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -42,8 +41,6 @@ public class HomeFragment extends Fragment implements PopStationAdapter.ItemClic
 
     private PopStationAdapter adapter;
 
-    private ProgressBar mPopLoadingProgressBar;
-
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -65,7 +62,6 @@ public class HomeFragment extends Fragment implements PopStationAdapter.ItemClic
         // binding
         mRadioFilterGrid = binding.gridRadioFilter;
         mRcvPopStations = binding.rcvPopRadio;
-        mPopLoadingProgressBar = binding.progressBarPopStationLoading;
         // set Adapter for Gridview
         RadioFilterGridViewAdapter adapter = new RadioFilterGridViewAdapter(requireContext(), Constants.sFilterList);
         mRadioFilterGrid.setAdapter(adapter);

@@ -82,26 +82,37 @@
             app:layout_constraintTop_toBottomOf="@+id/text_radio_player_title" />
 
         <ImageButton
+            android:id="@+id/btn_timer_clock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_64"
+            android:background="?android:selectableItemBackground"
+            android:src="@drawable/ic_clock_timer"
+            app:layout_constraintEnd_toStartOf="@+id/button_previous"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_radio_player_tags" />
+
+        <ImageButton
             android:id="@+id/button_previous"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_32"
             android:background="?android:selectableItemBackground"
             android:src="@drawable/ic_skip_previous"
             app:layout_constraintEnd_toStartOf="@+id/frame_layout_play_pause"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_radio_player_tags" />
+            app:layout_constraintStart_toEndOf="@+id/btn_timer_clock"
+            app:layout_constraintTop_toTopOf="@+id/btn_timer_clock" />
 
         <FrameLayout
             android:id="@+id/frame_layout_play_pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/button_previous"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_timer_clock"
             app:layout_constraintEnd_toStartOf="@+id/button_next"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/button_previous"
-            app:layout_constraintTop_toTopOf="@+id/button_previous">
+            app:layout_constraintTop_toTopOf="@+id/btn_timer_clock">
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/button_play_pause"
@@ -127,10 +138,21 @@
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
             android:src="@drawable/ic_skip_next"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_add_fav_full_player"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/frame_layout_play_pause"
-            app:layout_constraintTop_toTopOf="@+id/button_previous" />
+            app:layout_constraintTop_toTopOf="@+id/btn_timer_clock" />
+
+        <ImageButton
+            android:id="@+id/btn_add_fav_full_player"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:src="@drawable/ic_add_bookmark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/button_next"
+            app:layout_constraintTop_toTopOf="@+id/btn_timer_clock" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

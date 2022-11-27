@@ -71,7 +71,7 @@
             android:background="?android:selectableItemBackground"
             android:button="@null"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_add_fav"
+            android:src="@drawable/ic_add_bookmark_black"
             app:layout_constraintBottom_toBottomOf="@+id/image_favicon"
             app:layout_constraintEnd_toEndOf="@id/constraint_card_radio"
             app:layout_constraintTop_toTopOf="@+id/image_favicon" />

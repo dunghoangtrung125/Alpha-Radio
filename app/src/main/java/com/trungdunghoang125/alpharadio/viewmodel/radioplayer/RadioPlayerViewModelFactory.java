@@ -22,7 +22,6 @@ public class RadioPlayerViewModelFactory implements ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(RadioPlayerViewModel.class)) {
             return (T) new RadioPlayerViewModel(radioRepository);
         }
-
         throw new IllegalArgumentException("Unknown ViewModel class");
     }
 }

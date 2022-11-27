@@ -35,6 +35,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Vietnam"
+            android:textSize="12sp"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@id/constraint_mini_player"
             app:layout_constraintEnd_toEndOf="@+id/text_mini_player_station_name"
@@ -60,7 +61,7 @@
             android:background="?android:selectableItemBackground"
             android:button="@null"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_add_fav"
+            android:src="@drawable/ic_add_bookmark"
             app:layout_constraintBottom_toBottomOf="@+id/constraint_mini_player"
             app:layout_constraintEnd_toStartOf="@+id/button_play_mini_player"
             app:layout_constraintTop_toTopOf="@+id/constraint_mini_player" />
