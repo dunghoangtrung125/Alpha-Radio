@@ -82,6 +82,12 @@ public class CountryDetailFragment extends Fragment implements RadioStationAdapt
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    @Override
     public void onItemClick(int position) {
         // Send position data click to Radio Player Fragment
         Intent intent = new Intent(getContext(), RadioPlayerService.class);

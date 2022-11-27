@@ -52,6 +52,11 @@ public class RadioCacheDataSource implements RadioDataSource.Local {
     }
 
     @Override
+    public void getPopStation(RadioRepository.LoadStationsCallback callback) {
+
+    }
+
+    @Override
     public void saveCountries(List<Country> countries) {
         cachedCountries.clear();
         for (int i = 0; i < countries.size(); i++) {
@@ -64,9 +69,7 @@ public class RadioCacheDataSource implements RadioDataSource.Local {
     public void saveStations(List<RadioStation> stations) {
         cacheStations.clear();
         if (stations != null) {
-            new Thread(() -> {
-                cacheStations.addAll(stations);
-            }).start();
+            cacheStations.addAll(stations);
         }
     }
 

@@ -79,8 +79,8 @@ public class CountryListAdapter extends RecyclerView.Adapter<CountryListAdapter.
                     .into(mCountryFlag);
             Locale locale = new Locale("", country.getName());
             String countryName = locale.getDisplayCountry();
-            if (countryName.length() >= 8) {
-                mCountryName.setText(countryName.substring(0, 8) + "..");
+            if (countryName.length() >= 7) {
+                mCountryName.setText(countryName.substring(0, 7) + "..");
             } else {
                 mCountryName.setText(countryName);
             }

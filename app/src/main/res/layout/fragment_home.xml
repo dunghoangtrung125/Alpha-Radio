@@ -57,12 +57,12 @@
             android:id="@+id/grid_radio_filter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:horizontalSpacing="@dimen/dimen_16"
             android:layout_marginStart="@dimen/dimen_16"
-            android:layout_marginEnd="@dimen/dimen_16"
             android:layout_marginTop="@dimen/dimen_16"
-            android:numColumns="2"
+            android:layout_marginEnd="@dimen/dimen_16"
             android:background="@color/background_default"
+            android:horizontalSpacing="@dimen/dimen_16"
+            android:numColumns="2"
             android:verticalSpacing="@dimen/dimen_8"
             app:layout_constraintTop_toBottomOf="@+id/text_find_radio_title" />
 
@@ -71,17 +71,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dimen_16"
-            android:text="@string/recommend_stations"
+            android:text="@string/top_clicked_station"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_24"
             app:layout_constraintTop_toBottomOf="@+id/grid_radio_filter" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_recommend_radio"
+            android:id="@+id/rcv_pop_radio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_16"
-            app:layout_constraintTop_toBottomOf="@+id/text_radio_suggestion_title" />
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintTop_toBottomOf="@+id/text_radio_suggestion_title"
+            app:spanCount="2" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar_pop_station_loading"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="@dimen/dimen_64"
+            app:layout_constraintTop_toBottomOf="@+id/text_radio_suggestion_title"
+            app:layout_constraintStart_toStartOf="@+id/constraint_find_radio"
+            app:layout_constraintEnd_toEndOf="@+id/constraint_find_radio"
+            android:visibility="gone"
+            android:layout_height="wrap_content"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

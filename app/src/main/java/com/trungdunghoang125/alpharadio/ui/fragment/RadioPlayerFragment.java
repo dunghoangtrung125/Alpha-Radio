@@ -23,7 +23,6 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -34,6 +33,7 @@ import android.widget.TextView;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.bumptech.glide.Glide;
@@ -41,13 +41,19 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
 import com.trungdunghoang125.alpharadio.R;
+import com.trungdunghoang125.alpharadio.data.DataManager;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
+import com.trungdunghoang125.alpharadio.data.repository.RadioRepository;
 import com.trungdunghoang125.alpharadio.databinding.FragmentRadioPlayerBinding;
 import com.trungdunghoang125.alpharadio.service.RadioPlayerService;
+import com.trungdunghoang125.alpharadio.viewmodel.radioplayer.RadioPlayerViewModel;
+import com.trungdunghoang125.alpharadio.viewmodel.radioplayer.RadioPlayerViewModelFactory;
 
 public class RadioPlayerFragment extends Fragment implements ServiceConnection {
 
     private FragmentRadioPlayerBinding binding;
+
+    private RadioPlayerViewModel viewModel;
 
     private ImageView mMiniPlayerStationImage, mFullPlayerStationImage;
 
@@ -65,7 +71,7 @@ public class RadioPlayerFragment extends Fragment implements ServiceConnection {
 
     private LinearLayout mLayoutFullScreenPlayer;
 
-    private CheckBox mMiniPlayerCbFavStation;
+    private ImageButton mMiniPlayerBtnAddFav;
 
     private RadioPlayerService mRadioService;
 
@@ -122,7 +128,7 @@ public class RadioPlayerFragment extends Fragment implements ServiceConnection {
         mMiniPlayerStationTitle = binding.layoutMiniPlayer.textMiniPlayerStationName;
         mMiniPlayerStationCountry = binding.layoutMiniPlayer.textMiniPlayerStationCountry;
         mMiniPlayerBtnPlayPause = binding.layoutMiniPlayer.buttonPlayMiniPlayer;
-        mMiniPlayerCbFavStation = binding.layoutMiniPlayer.cbFavStationMiniPlayer;
+        mMiniPlayerBtnAddFav = binding.layoutMiniPlayer.btnAddFavMiniPlayer;
         mLayoutMiniPlayer = binding.layoutMiniPlayer.constraintMiniPlayer;
         mLayoutBottomSheet = binding.bottomNavigationContainer;
         mBottomSheetBehavior = BottomSheetBehavior.from(mLayoutBottomSheet);
@@ -139,6 +145,12 @@ public class RadioPlayerFragment extends Fragment implements ServiceConnection {
         mFullPlayerStationImage = binding.layoutFullPlayer.imageRadioStationPlayer;
         mFullPlayerLoading = binding.layoutFullPlayer.progressBarRadioLoading;
 
+        // view model instance
+        RadioRepository repository = DataManager.getInstance().getRadioRepository();
+        RadioPlayerViewModelFactory factory = new RadioPlayerViewModelFactory(repository);
+        viewModel = new ViewModelProvider(this, factory).get(RadioPlayerViewModel.class);
+
+        // Get station data for mini player when the app first launch
         getDataFromSharedPreferences();
 
         // listener for playPause button
@@ -168,6 +180,8 @@ public class RadioPlayerFragment extends Fragment implements ServiceConnection {
             }
         });
 
+        addFavStationBtnClicked();
+
         return binding.getRoot();
     }
 
@@ -195,6 +209,12 @@ public class RadioPlayerFragment extends Fragment implements ServiceConnection {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         Intent intent = new Intent(requireContext(), RadioPlayerService.class);
@@ -209,7 +229,7 @@ public class RadioPlayerFragment extends Fragment implements ServiceConnection {
         mLayoutMiniPlayer.setAlpha(0);
         // Disable button of mini player
         mMiniPlayerBtnPlayPause.setClickable(false);
-        mMiniPlayerCbFavStation.setClickable(false);
+        mMiniPlayerBtnAddFav.setClickable(false);
     }
 
     private void hideMusicPlayer() {
@@ -217,7 +237,13 @@ public class RadioPlayerFragment extends Fragment implements ServiceConnection {
         mLayoutFullScreenPlayer.setVisibility(View.GONE);
         mLayoutMiniPlayer.setAlpha(1);
         mMiniPlayerBtnPlayPause.setClickable(true);
-        mMiniPlayerCbFavStation.setClickable(true);
+        mMiniPlayerBtnAddFav.setClickable(true);
+    }
+
+    private void addFavStationBtnClicked() {
+        mMiniPlayerBtnAddFav.setOnClickListener(view -> {
+            viewModel.addFavStation(station);
+        });
     }
 
     private void playPauseButtonClicked() {
@@ -247,6 +273,11 @@ public class RadioPlayerFragment extends Fragment implements ServiceConnection {
             return;
         }
         // meta data for mini player
+        if (station.getName().length() >= 28) {
+            mMiniPlayerStationTitle.setText(station.getName().substring(0, 28) + "...");
+        } else {
+            mMiniPlayerStationTitle.setText(station.getName());
+        }
         mMiniPlayerStationTitle.setText(station.getName());
         mMiniPlayerStationCountry.setText(station.getCountry());
         Glide.with(requireContext())

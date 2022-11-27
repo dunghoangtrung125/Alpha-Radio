@@ -49,7 +49,7 @@ public interface RadioBrowserApi {
             @Query("hidebroken") boolean hidebroken
     );
 
-    // Get Radio By Name
+    // Get Radio By Name (Search)
     @Headers({
             "X-RapidAPI-Key: " + Constants.X_RAPIDAPI_KEY,
             "X-RapidAPI-Host: " + Constants.X_RAPIDAPI_HOST
@@ -58,6 +58,18 @@ public interface RadioBrowserApi {
     Call<List<RadioStation>> getRadioByName(
             @Query("name") String name,
             @Query("reverse") boolean reverse,
+            @Query("offset") int offset,
+            @Query("limit") int limit,
+            @Query("hidebroken") boolean hidebroken
+    );
+
+    // Get Popular Radio Station (top clicked) - get 30 items
+    @Headers({
+            "X-RapidAPI-Key: " + Constants.X_RAPIDAPI_KEY,
+            "X-RapidAPI-Host: " + Constants.X_RAPIDAPI_HOST
+    })
+    @GET("stations/topclick/30")
+    Call<List<RadioStation>> getPopStation(
             @Query("offset") int offset,
             @Query("limit") int limit,
             @Query("hidebroken") boolean hidebroken

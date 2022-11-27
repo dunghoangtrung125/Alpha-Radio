@@ -66,6 +66,12 @@ public class CountryFragment extends Fragment implements CountryListAdapter.Coun
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    @Override
     public void onItemClick(Country country) {
         //CountryDetailActivity.start(CountryActivity.this, country.getName());
         CountryDetailFragment.start(getActivity(), country.getName());

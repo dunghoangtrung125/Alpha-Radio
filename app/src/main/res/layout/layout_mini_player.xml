@@ -19,22 +19,25 @@
 
         <TextView
             android:id="@+id/text_mini_player_station_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_16"
+            android:layout_marginEnd="@dimen/dimen_16"
             android:text="Station name"
             android:textColor="@color/white"
             app:layout_constraintBottom_toTopOf="@+id/text_mini_player_station_country"
+            app:layout_constraintEnd_toStartOf="@+id/btn_add_fav_mini_player"
             app:layout_constraintStart_toEndOf="@id/image_mini_player"
             app:layout_constraintTop_toTopOf="@+id/constraint_mini_player" />
 
         <TextView
             android:id="@+id/text_mini_player_station_country"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Vietnam"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@id/constraint_mini_player"
+            app:layout_constraintEnd_toEndOf="@+id/text_mini_player_station_name"
             app:layout_constraintStart_toStartOf="@+id/text_mini_player_station_name"
             app:layout_constraintTop_toBottomOf="@+id/text_mini_player_station_name" />
 
@@ -49,13 +52,15 @@
             app:layout_constraintEnd_toEndOf="@+id/constraint_mini_player"
             app:layout_constraintTop_toTopOf="@+id/constraint_mini_player" />
 
-        <CheckBox
-            android:id="@+id/cb_fav_station_mini_player"
-            android:layout_width="@dimen/dimen_24"
-            android:layout_height="@dimen/dimen_24"
+        <ImageButton
+            android:id="@+id/btn_add_fav_mini_player"
+            android:layout_width="@dimen/dimen_fav_min_width"
+            android:layout_height="@dimen/dimen_fav_mini_height"
             android:layout_marginEnd="@dimen/dimen_16"
-            android:background="@drawable/checkbox_selector_favorite"
+            android:background="?android:selectableItemBackground"
             android:button="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_add_fav"
             app:layout_constraintBottom_toBottomOf="@+id/constraint_mini_player"
             app:layout_constraintEnd_toStartOf="@+id/button_play_mini_player"
             app:layout_constraintTop_toTopOf="@+id/constraint_mini_player" />

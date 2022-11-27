@@ -205,7 +205,10 @@ public class RadioPlayerService extends Service {
     }
 
     public void getCurrentStation(int position) {
-        currentStation = RadioCacheDataSource.cacheStations.get(position);
+        if (currentPosition < RadioCacheDataSource.cacheStations.size()) {
+            currentStation = RadioCacheDataSource.cacheStations.get(position);
+        }
+
         // add this station to shared preferences for using in mini player view
         SharedPreferences.Editor editor = getSharedPreferences(RADIO_LAST_PLAYED, MODE_PRIVATE)
                 .edit();

@@ -76,6 +76,32 @@ public class RepositoryImpl implements RadioRepository {
     }
 
     @Override
+    public void getPopStation(LoadStationsCallback callback) {
+        if (callback == null) return;
+        getPopStationFromRemote(callback);
+    }
+
+    private void getPopStationFromRemote(LoadStationsCallback callback) {
+        remote.getPopStation(new LoadStationsCallback() {
+            @Override
+            public void onStationsLoad(List<RadioStation> stations) {
+                callback.onStationsLoad(stations);
+                refreshStationsCache(stations);
+            }
+
+            @Override
+            public void onDataLoadFailed() {
+                callback.onDataLoadFailed();
+            }
+
+            @Override
+            public void onError() {
+                callback.onError();
+            }
+        });
+    }
+
+    @Override
     public void saveStations(List<RadioStation> stations) {
         refreshStationsCache(stations);
     }

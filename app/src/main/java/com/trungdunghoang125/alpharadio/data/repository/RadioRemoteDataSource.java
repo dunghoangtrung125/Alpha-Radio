@@ -99,4 +99,25 @@ public class RadioRemoteDataSource implements RadioDataSource.Remote {
             }
         });
     }
+
+    @Override
+    public void getPopStation(RadioRepository.LoadStationsCallback callback) {
+        Log.d("tranle1811", "getPopStation: ");
+        api.getPopStation(0, 100000, false).enqueue(new Callback<List<RadioStation>>() {
+            @Override
+            public void onResponse(Call<List<RadioStation>> call, Response<List<RadioStation>> response) {
+                if (response.code() == 200) {
+                    List<RadioStation> popStations = response.body();
+                    callback.onStationsLoad(popStations);
+                } else {
+                    callback.onDataLoadFailed();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<RadioStation>> call, Throwable t) {
+                callback.onError();
+            }
+        });
+    }
 }

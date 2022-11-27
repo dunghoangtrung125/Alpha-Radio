@@ -18,4 +18,6 @@
     <dimen name="dimen_40">40dp</dimen>
     <dimen name="text_12">12sp</dimen>
     <dimen name="dimen_128">128dp</dimen>
+    <dimen name="dimen_fav_min_width">18dp</dimen>
+    <dimen name="dimen_fav_mini_height">24dp</dimen>
 </resources>

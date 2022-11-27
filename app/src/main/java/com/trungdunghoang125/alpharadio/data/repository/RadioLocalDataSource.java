@@ -62,6 +62,11 @@ public class RadioLocalDataSource implements RadioDataSource.Local {
     }
 
     @Override
+    public void getPopStation(RadioRepository.LoadStationsCallback callback) {
+
+    }
+
+    @Override
     public void saveCountries(List<Country> countries) {
         Runnable runnable = () -> countryDao.saveCountries(countries);
         executor.execute(runnable);
@@ -85,13 +90,13 @@ public class RadioLocalDataSource implements RadioDataSource.Local {
     public void addFavStation(RadioStation station) {
         Runnable runnable = () -> stationDao.insert(station);
         executor.execute(runnable);
-        Toast.makeText(App.getInstance(), "Add " + station.getName() + "to favorite list", Toast.LENGTH_SHORT).show();
+        Toast.makeText(App.getInstance(), "Add " + station.getName() + " to favorite list", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void removeFavStation(RadioStation station) {
         Runnable runnable = () -> stationDao.delete(station);
         executor.execute(runnable);
-        Toast.makeText(App.getInstance(), "Remove " + station.getName() + "from favorite list", Toast.LENGTH_SHORT).show();
+        Toast.makeText(App.getInstance(), "Remove " + station.getName() + " from favorite list", Toast.LENGTH_SHORT).show();
     }
 }

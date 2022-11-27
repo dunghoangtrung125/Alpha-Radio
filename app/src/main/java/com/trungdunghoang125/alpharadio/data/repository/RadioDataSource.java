@@ -15,6 +15,8 @@ public interface RadioDataSource {
         void getCountryRadioStation(RadioRepository.LoadStationsCallback callback, String countryCode);
 
         void getStationSearchResult(RadioRepository.LoadStationsCallback callback, String name);
+
+        void getPopStation(RadioRepository.LoadStationsCallback callback);
     }
 
     interface Local extends Remote {

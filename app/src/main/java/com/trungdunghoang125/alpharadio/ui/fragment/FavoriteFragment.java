@@ -64,6 +64,12 @@ public class FavoriteFragment extends Fragment implements FavStationAdapter.Stat
         return binding.getRoot();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
     private void observerDataChange() {
         viewModel.getFavStations();
         viewModel.getFavListLiveData().observe(getViewLifecycleOwner(), new Observer<List<RadioStation>>() {
