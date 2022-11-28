@@ -33,11 +33,24 @@
         android:layout_weight="5"
         android:background="@drawable/background_layout">
 
+        <ProgressBar
+            android:id="@+id/progress_near_you_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_64"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/constraint_near_me"
+            app:layout_constraintStart_toStartOf="@+id/constraint_near_me"
+            app:layout_constraintTop_toTopOf="@+id/constraint_near_me" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/near_me_result_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_32"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/dimen_164"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toTopOf="@+id/constraint_near_me" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

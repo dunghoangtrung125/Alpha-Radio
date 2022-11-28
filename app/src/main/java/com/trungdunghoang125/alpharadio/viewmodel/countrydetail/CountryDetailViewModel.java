@@ -24,10 +24,8 @@ public class CountryDetailViewModel extends ViewModel implements Filterable {
     private final MutableLiveData<Void> hideLoadingLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessageLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<RadioStation>> radioFilterLiveData = new MutableLiveData<>();
-    private List<RadioStation> resultList = new ArrayList<>();
-
     private final RadioRepository repository;
-
+    private List<RadioStation> resultList = new ArrayList<>();
     private RadioCallback radioCallback = new RadioCallback();
 
     public CountryDetailViewModel(RadioRepository repository) {
@@ -36,6 +34,11 @@ public class CountryDetailViewModel extends ViewModel implements Filterable {
 
     public LiveData<List<RadioStation>> getStationsLiveData() {
         return stationsLiveData;
+    }
+
+    private void setStationsLiveData(List<RadioStation> stations) {
+        setIsLoading(false);
+        stationsLiveData.postValue(stations);
     }
 
     public MutableLiveData<Void> getShowLoadingLiveData() {
@@ -57,11 +60,6 @@ public class CountryDetailViewModel extends ViewModel implements Filterable {
     public void getStations(String countryCode) {
         setIsLoading(true);
         repository.getStations(radioCallback, countryCode);
-    }
-
-    private void setStationsLiveData(List<RadioStation> stations) {
-        setIsLoading(false);
-        stationsLiveData.postValue(stations);
     }
 
     private void setIsLoading(boolean loading) {
