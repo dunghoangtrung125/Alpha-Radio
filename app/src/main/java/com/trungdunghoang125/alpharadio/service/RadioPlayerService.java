@@ -89,13 +89,10 @@ public class RadioPlayerService extends Service {
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                 "AlphaRadio::MyWakeLockTag");
         wakeLock.acquire();
-        // Log
-        Log.d("tranle1811", "Service onCreate");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("tranle1811", "Service onStartCommand");
         // handle action from notification
         String action = intent.getStringExtra(ACTION_NAME);
         if (action != null) {
@@ -131,19 +128,16 @@ public class RadioPlayerService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d("tranle1811", "Service onBind");
         return mIBinder;
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        Log.d("tranle1811", "Service onUnbind");
         return super.onUnbind(intent);
     }
 
     @Override
     public void onDestroy() {
-        Log.d("tranle1811", "Service onDestroy");
         super.onDestroy();
         player.release();
         wakeLock.release();

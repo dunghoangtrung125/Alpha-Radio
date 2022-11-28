@@ -1,19 +1,24 @@
 package com.trungdunghoang125.alpharadio.ui.activity;
 
-import static com.trungdunghoang125.alpharadio.service.RadioPlayerService.RADIO_LAST_PLAYED;
-
-import android.content.SharedPreferences;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.snackbar.Snackbar;
 import com.trungdunghoang125.alpharadio.R;
 import com.trungdunghoang125.alpharadio.databinding.ActivityMainBinding;
 import com.trungdunghoang125.alpharadio.ui.fragment.FavoriteFragment;
@@ -25,15 +30,17 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private BottomNavigationView navigationView;
     private FragmentContainerView fragmentMiniPlayer;
+    private BroadcastReceiver broadcastReceiver;
+    private Snackbar snackbar;
+    private ConstraintLayout homeScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        fragmentMiniPlayer = binding.fragmentContainerViewMiniPlayer;
-
         setContentView(binding.getRoot());
-
+        fragmentMiniPlayer = binding.fragmentContainerViewMiniPlayer;
+        homeScreen = binding.homeScreen;
         navigationView = binding.bottomNav;
         navigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -70,6 +77,39 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        configureSnackBar();
+        observerNetworkState();
+    }
+
+    private void configureSnackBar() {
+        snackbar = Snackbar.make(homeScreen, "No internet connection", Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("DISMISS", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        });
+    }
+
+    private void observerNetworkState() {
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                    NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+                    if (networkInfo != null && networkInfo.getDetailedState() == NetworkInfo.DetailedState.CONNECTED) {
+                        if (snackbar.isShown()) {
+                            snackbar.dismiss();
+                        }
+                    } else if (networkInfo != null && networkInfo.getDetailedState() == NetworkInfo.DetailedState.DISCONNECTED) {
+                        snackbar.show();
+                    }
+                }
+            }
+        };
+
+        IntentFilter filter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(broadcastReceiver, filter);
     }
 
 //    @Override

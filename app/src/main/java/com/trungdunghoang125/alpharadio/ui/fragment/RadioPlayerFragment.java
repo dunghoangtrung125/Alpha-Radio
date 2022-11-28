@@ -198,31 +198,31 @@ public class RadioPlayerFragment extends Fragment implements ServiceConnection {
         timerDialog.show();
 
         timerDialog.findViewById(R.id.tv_5mins).setOnClickListener(view -> {
-            Toast.makeText(getContext(), "Radio will stop after 5 mins", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Radio will stop after 5 minutes", Toast.LENGTH_SHORT).show();
             SleepTimer.createSleepTimer(getContext(), 1);
             timerDialog.dismiss();
         });
 
         timerDialog.findViewById(R.id.tv_10mins).setOnClickListener(view -> {
-            Toast.makeText(getContext(), "Radio will stop after 10 mins", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Radio will stop after 10 minutes", Toast.LENGTH_SHORT).show();
             SleepTimer.createSleepTimer(getContext(), 10);
             timerDialog.dismiss();
         });
 
         timerDialog.findViewById(R.id.tv_15mins).setOnClickListener(view -> {
-            Toast.makeText(getContext(), "Radio will stop after 15 mins", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Radio will stop after 15 minutes", Toast.LENGTH_SHORT).show();
             SleepTimer.createSleepTimer(getContext(), 15);
             timerDialog.dismiss();
         });
 
         timerDialog.findViewById(R.id.tv_30mins).setOnClickListener(view -> {
-            Toast.makeText(getContext(), "Radio will stop after 30 mins", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Radio will stop after 30 minutes", Toast.LENGTH_SHORT).show();
             SleepTimer.createSleepTimer(getContext(), 30);
             timerDialog.dismiss();
         });
 
         timerDialog.findViewById(R.id.tv_45mins).setOnClickListener(view -> {
-            Toast.makeText(getContext(), "Radio will stop after 45 mins", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Radio will stop after 45 minutes", Toast.LENGTH_SHORT).show();
             SleepTimer.createSleepTimer(getContext(), 45);
             timerDialog.dismiss();
         });
