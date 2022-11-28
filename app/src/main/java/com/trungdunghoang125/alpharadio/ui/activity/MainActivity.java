@@ -1,9 +1,13 @@
 package com.trungdunghoang125.alpharadio.ui.activity;
 
+import static com.trungdunghoang125.alpharadio.service.RadioPlayerService.ACTION_SHOW_MINI_PLAYER;
+import static com.trungdunghoang125.alpharadio.service.RadioPlayerService.RADIO_LAST_PLAYED;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -78,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         configureSnackBar();
-        observerNetworkState();
+        observerReceiver();
     }
 
     private void configureSnackBar() {
@@ -91,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void observerNetworkState() {
+    private void observerReceiver() {
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -105,22 +109,40 @@ public class MainActivity extends AppCompatActivity {
                         snackbar.show();
                     }
                 }
+                // show mini player
+                if (intent.getAction().equals(ACTION_SHOW_MINI_PLAYER)) {
+                    fragmentMiniPlayer.setVisibility(View.VISIBLE);
+                }
             }
         };
 
-        IntentFilter filter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        filter.addAction(ACTION_SHOW_MINI_PLAYER);
         registerReceiver(broadcastReceiver, filter);
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        SharedPreferences preferences = getSharedPreferences(RADIO_LAST_PLAYED, MODE_PRIVATE);
-//        String value = preferences.getString("Station", null);
-//        if (value == null) {
-//            fragmentMiniPlayer.setVisibility(View.GONE);
-//        } else {
-//            fragmentMiniPlayer.setVisibility(View.VISIBLE);
-//        }
-//    }
+    // Check if there is no data of last played station, hide the mini player
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences preferences = getSharedPreferences(RADIO_LAST_PLAYED, MODE_PRIVATE);
+        String value = preferences.getString("Station", null);
+        if (value == null) {
+            fragmentMiniPlayer.setVisibility(View.GONE);
+        } else {
+            fragmentMiniPlayer.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(broadcastReceiver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

@@ -85,21 +85,24 @@ public class NearYouFragment extends Fragment implements RadioStationAdapter.Sta
         locationManager = (LocationManager) requireContext().getSystemService(LOCATION_SERVICE);
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION);
-            TelephonyManager tm = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
-            countryCode = tm.getNetworkCountryIso().toUpperCase(Locale.ROOT);
+            getCountryCodeByNetWorkProvider();
         } else {
             location = locationManager
                     .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             geocoder = new Geocoder(getContext());
             try {
-                addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 10);
+                if (location != null) {
+                    addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 10);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Address address = addresses.get(0);
-            countryCode = address.getCountryCode();
+            if (addresses != null) {
+                Address address = addresses.get(0);
+                countryCode = address.getCountryCode();
+                Log.d("tranle1811", "onCreateView: " + address.getCountryCode());
+            }
         }
-        Log.d("tranle1811", "onCreateView: " + countryCode);
 
         // Inflate the layout for this fragment
         binding = FragmentNearYouBinding.inflate(inflater, container, false);
@@ -115,6 +118,12 @@ public class NearYouFragment extends Fragment implements RadioStationAdapter.Sta
         viewModel.getStationsInYourLocation(countryCode);
 
         return binding.getRoot();
+    }
+
+    private void getCountryCodeByNetWorkProvider() {
+        TelephonyManager tm = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        countryCode = tm.getNetworkCountryIso().toUpperCase(Locale.ROOT);
+        Log.d("tranle1811", "getCountryCodeByNetWorkProvider: ");
     }
 
     private void configureRecyclerView() {

@@ -22,7 +22,6 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -51,6 +50,7 @@ public class RadioPlayerService extends Service {
     public static final String ACTION_PLAY = "action-play";
     public static final String ACTION_STOP = "action-stop";
     public static final String ACTION_NEXT = "action-next";
+    public static final String ACTION_SHOW_MINI_PLAYER = "action-show-mini-player";
     public static final String RADIO_LAST_PLAYED = "LAST_PLAYED";
     public static final String SEND_DATA_TO_PLAYER = "send-data-to-player";
 
@@ -181,6 +181,12 @@ public class RadioPlayerService extends Service {
         player.prepare();
         sendNotification(currentStation);
         sendDataToMusicPlayerFragment(ACTION_PLAY);
+        sendIntentToOpenMiniPlayer();
+    }
+
+    private void sendIntentToOpenMiniPlayer() {
+        Intent intent = new Intent(ACTION_SHOW_MINI_PLAYER);
+        sendBroadcast(intent);
     }
 
     public void stopExoPlayer() {

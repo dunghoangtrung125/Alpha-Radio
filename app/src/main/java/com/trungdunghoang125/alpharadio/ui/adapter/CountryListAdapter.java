@@ -75,7 +75,7 @@ public class CountryListAdapter extends RecyclerView.Adapter<CountryListAdapter.
             Glide.with(holder.itemView.getContext())
                     .applyDefaultRequestOptions(new RequestOptions()
                             .placeholder(R.drawable.ic_radio))
-                    .load(Constants.BASE_COUNTRY_FLAG_URL + country.getName())
+                    .load(Constants.BASE_COUNTRY_FLAG_URL + country.getName() + ".png")
                     .into(mCountryFlag);
             Locale locale = new Locale("", country.getName());
             String countryName = locale.getDisplayCountry();

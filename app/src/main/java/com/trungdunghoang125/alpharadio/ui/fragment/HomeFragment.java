@@ -2,11 +2,8 @@ package com.trungdunghoang125.alpharadio.ui.fragment;
 
 import static com.trungdunghoang125.alpharadio.ui.fragment.CountryDetailFragment.START_RADIO_EXTRAS;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +20,6 @@ import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 import com.trungdunghoang125.alpharadio.data.repository.RadioRepository;
 import com.trungdunghoang125.alpharadio.databinding.FragmentHomeBinding;
 import com.trungdunghoang125.alpharadio.service.RadioPlayerService;
-import com.trungdunghoang125.alpharadio.ui.activity.LanguageActivity;
 import com.trungdunghoang125.alpharadio.ui.adapter.PopStationAdapter;
 import com.trungdunghoang125.alpharadio.ui.adapter.RadioFilterGridViewAdapter;
 import com.trungdunghoang125.alpharadio.utils.Constants;
@@ -77,7 +73,6 @@ public class HomeFragment extends Fragment implements PopStationAdapter.ItemClic
                         CountryFragment.start(requireActivity());
                         break;
                     case 1:
-                        LanguageActivity.start(getActivity());
                         break;
                 }
             }
