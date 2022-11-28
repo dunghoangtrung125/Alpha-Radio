@@ -54,14 +54,26 @@
             app:layout_constraintStart_toStartOf="@+id/constraint_search"
             app:layout_constraintTop_toTopOf="@+id/constraint_search" />
 
+        <TextView
+            android:id="@+id/tv_message_item_not_find"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_64"
+            android:text="@string/message_item_not_find"
+            android:textAlignment="center"
+            android:textSize="@dimen/text_16"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="@+id/constraint_search" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/search_result_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_32"
-            app:layout_constraintTop_toTopOf="@+id/constraint_search"
             android:clipToPadding="false"
             android:paddingBottom="160dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toTopOf="@+id/constraint_search" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

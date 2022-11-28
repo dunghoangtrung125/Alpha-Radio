@@ -57,11 +57,8 @@ public class RadioPlayerService extends Service {
     private static Bitmap image = BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.ic_radio);
 
     private final IBinder mIBinder = new ServiceBinder();
-
-    private ExoPlayer player;
-
     public RadioStation currentStation = null;
-
+    private ExoPlayer player;
     private LocalBroadcastManager localBroadcast;
 
     private int currentPosition;
@@ -231,12 +228,6 @@ public class RadioPlayerService extends Service {
         player.setMediaItem(mediaItem);
     }
 
-    public class ServiceBinder extends Binder {
-        public RadioPlayerService getRadioPlayerService() {
-            return RadioPlayerService.this;
-        }
-    }
-
     /**
      * Notification push
      */
@@ -246,20 +237,24 @@ public class RadioPlayerService extends Service {
             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
             MediaSessionCompat mediaSession = new MediaSessionCompat(this, "media-session");
             // set bitmap image for notification
-            Glide.with(this)
-                    .asBitmap()
-                    .load(station.getFavicon())
-                    .into(new CustomTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                            image = resource;
-                        }
+            if (station.getFavicon() == null) {
+                image = BitmapFactory.decodeResource(getResources(), R.drawable.ic_radio);
+            } else {
+                Glide.with(this)
+                        .asBitmap()
+                        .load(station.getFavicon())
+                        .into(new CustomTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                image = resource;
+                            }
 
-                        @Override
-                        public void onLoadCleared(@Nullable Drawable placeholder) {
-                            image = BitmapFactory.decodeResource(getResources(), R.drawable.ic_radio);
-                        }
-                    });
+                            @Override
+                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                                image = BitmapFactory.decodeResource(getResources(), R.drawable.ic_radio);
+                            }
+                        });
+            }
 
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_radio)
@@ -307,5 +302,11 @@ public class RadioPlayerService extends Service {
         bundle.putString("action", action);
         intent.putExtras(bundle);
         localBroadcast.sendBroadcast(intent);
+    }
+
+    public class ServiceBinder extends Binder {
+        public RadioPlayerService getRadioPlayerService() {
+            return RadioPlayerService.this;
+        }
     }
 }

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.SearchView;
@@ -39,6 +40,8 @@ public class SearchFragment extends Fragment implements RadioStationAdapter.Stat
 
     private RadioStationAdapter adapter;
 
+    private TextView mTvMessageItemNotFind;
+
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -56,6 +59,7 @@ public class SearchFragment extends Fragment implements RadioStationAdapter.Stat
         mSearchView = binding.searchViewAdvance;
         mStationSearchLoading = binding.progressBarSearchLoading;
         mRcvSearchResult = binding.searchResultList;
+        mTvMessageItemNotFind = binding.tvMessageItemNotFind;
         // view model instance
         RadioRepository repository = DataManager.getInstance().getRadioRepository();
         SearchViewModelFactory factory = new SearchViewModelFactory(repository);
@@ -96,6 +100,11 @@ public class SearchFragment extends Fragment implements RadioStationAdapter.Stat
         });
 
         viewModel.getStationsLiveData().observe(getViewLifecycleOwner(), stations -> {
+            if (stations.size() == 0) {
+                mTvMessageItemNotFind.setVisibility(View.VISIBLE);
+            } else {
+                mTvMessageItemNotFind.setVisibility(View.GONE);
+            }
             adapter.setStationList(stations);
         });
 
