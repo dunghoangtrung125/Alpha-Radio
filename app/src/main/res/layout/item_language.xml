@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dimen_8">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_language"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/dimen_16"
+        app:cardElevation="@dimen/dimen_8"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="#FFF3E0"
+        app:strokeWidth="4dp">
+
+        <ImageView
+            android:id="@+id/img_language"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:src="@drawable/img_language"
+            android:scaleType="centerCrop" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/tv_language_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_8"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/card_language" />
+
+    <TextView
+        android:id="@+id/tv_language_station_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="@dimen/text_12"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/tv_language_name" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

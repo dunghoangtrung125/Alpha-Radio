@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -37,6 +38,8 @@ public class CountryFragment extends Fragment implements CountryListAdapter.Coun
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    private ImageButton mBackButton;
+
     public CountryFragment() {
         // Required empty public constructor
     }
@@ -44,14 +47,13 @@ public class CountryFragment extends Fragment implements CountryListAdapter.Coun
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d("tranle1811", "onCreateView: " + "Country fragment");
         super.onCreate(savedInstanceState);
         binding = FragmentCountryBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
         // binding
         mRcvCountry = binding.rcvCountryList;
         swipeRefreshLayout = binding.swipeToRefreshCountry;
         mProgressBarCountry = binding.progressBarCountry;
+        mBackButton = binding.btnBackCountry;
         // view model instance
         RadioRepository radioRepository = DataManager.getInstance().getRadioRepository();
         CountryViewModelFactory factory = new CountryViewModelFactory(radioRepository);
@@ -60,9 +62,9 @@ public class CountryFragment extends Fragment implements CountryListAdapter.Coun
         viewModel.getCountries();
         observerCountryViewModel();
         swipeToRefreshData();
-        // Inflate the layout for this fragment
+        setBackStackButton();
 
-        return view;
+        return binding.getRoot();
     }
 
     @Override
@@ -111,6 +113,12 @@ public class CountryFragment extends Fragment implements CountryListAdapter.Coun
             public void onChanged(String message) {
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             }
+        });
+    }
+
+    private void setBackStackButton() {
+        mBackButton.setOnClickListener(view -> {
+            requireActivity().getSupportFragmentManager().popBackStack();
         });
     }
 

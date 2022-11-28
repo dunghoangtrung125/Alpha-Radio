@@ -25,4 +25,5 @@
     <string name="_1_hour">1 hour</string>
     <string name="turn_off_timer">Turn off timer</string>
     <string name="message_item_not_find">Oops! We can\'t find your station</string>
+    <string name="languages">Languages</string>
 </resources>

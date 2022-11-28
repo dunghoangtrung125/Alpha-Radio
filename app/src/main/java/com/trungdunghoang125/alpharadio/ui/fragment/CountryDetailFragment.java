@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.SearchView;
@@ -28,6 +30,7 @@ import com.trungdunghoang125.alpharadio.viewmodel.countrydetail.CountryDetailVie
 import com.trungdunghoang125.alpharadio.viewmodel.countrydetail.CountryDetailViewModelFactory;
 
 import java.util.List;
+import java.util.Locale;
 
 public class CountryDetailFragment extends Fragment implements RadioStationAdapter.StationItemClick {
 
@@ -51,6 +54,10 @@ public class CountryDetailFragment extends Fragment implements RadioStationAdapt
 
     private String mCountryCode;
 
+    private ImageButton mBackStackBtn;
+
+    private TextView mTitleAppbar;
+
     public CountryDetailFragment() {
         // Required empty public constructor
     }
@@ -64,6 +71,8 @@ public class CountryDetailFragment extends Fragment implements RadioStationAdapt
         swipeRefreshLayout = binding.swipeToRefreshStation;
         mCountryDetailProgressBar = binding.progressBarCountryDetail;
         mCountryStationListSearch = binding.searchViewStation;
+        mBackStackBtn = binding.btnBackCountryDetail;
+        mTitleAppbar = binding.tvCountryNameAppBar;
         // view model instance
         RadioRepository repository = DataManager.getInstance().getRadioRepository();
         CountryDetailViewModelFactory factory = new CountryDetailViewModelFactory(repository);
@@ -77,8 +86,16 @@ public class CountryDetailFragment extends Fragment implements RadioStationAdapt
         swipeToRefreshRadioStation();
         // search view filter list
         filterListBySearchView();
+        setBackStackButton();
+        setTextForAppBar();
 
         return view;
+    }
+
+    private void setTextForAppBar() {
+        Locale locale = new Locale("", mCountryCode);
+        String countryName = locale.getDisplayCountry();
+        mTitleAppbar.setText(countryName);
     }
 
     @Override
@@ -103,6 +120,12 @@ public class CountryDetailFragment extends Fragment implements RadioStationAdapt
     private void configureRecyclerView() {
         adapter = new RadioStationAdapter(CountryDetailFragment.this);
         mRcvStationList.setAdapter(adapter);
+    }
+
+    private void setBackStackButton() {
+        mBackStackBtn.setOnClickListener(view -> {
+            requireActivity().getSupportFragmentManager().popBackStack();
+        });
     }
 
     private void filterListBySearchView() {

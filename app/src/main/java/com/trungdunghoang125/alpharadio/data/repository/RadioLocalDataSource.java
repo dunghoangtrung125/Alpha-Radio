@@ -2,12 +2,12 @@ package com.trungdunghoang125.alpharadio.data.repository;
 
 import android.widget.Toast;
 
-import androidx.lifecycle.LiveData;
-
 import com.trungdunghoang125.alpharadio.App;
 import com.trungdunghoang125.alpharadio.data.domain.Country;
+import com.trungdunghoang125.alpharadio.data.domain.Language;
 import com.trungdunghoang125.alpharadio.data.local.country.CountryDao;
 import com.trungdunghoang125.alpharadio.data.local.favorite.FavStationDao;
+import com.trungdunghoang125.alpharadio.data.local.language.LanguageDao;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 import com.trungdunghoang125.alpharadio.utils.DiskExecutor;
 
@@ -23,19 +23,22 @@ public class RadioLocalDataSource implements RadioDataSource.Local {
 
     private final CountryDao countryDao;
 
+    private final LanguageDao languageDao;
+
     private final FavStationDao stationDao;
 
     private static RadioLocalDataSource instance;
 
-    private RadioLocalDataSource(Executor executor, CountryDao countryDao, FavStationDao stationDao) {
+    private RadioLocalDataSource(Executor executor, CountryDao countryDao, LanguageDao languageDao, FavStationDao stationDao) {
         this.executor = executor;
         this.countryDao = countryDao;
+        this.languageDao = languageDao;
         this.stationDao = stationDao;
     }
 
-    public static RadioLocalDataSource getInstance(CountryDao countryDao, FavStationDao stationDao) {
+    public static RadioLocalDataSource getInstance(CountryDao countryDao, LanguageDao languageDao, FavStationDao stationDao) {
         if (instance == null) {
-            instance = new RadioLocalDataSource(new DiskExecutor(), countryDao, stationDao);
+            instance = new RadioLocalDataSource(new DiskExecutor(), countryDao, languageDao, stationDao);
         }
         return instance;
     }
@@ -57,6 +60,22 @@ public class RadioLocalDataSource implements RadioDataSource.Local {
     }
 
     @Override
+    public void getLanguages(RadioRepository.LoadLanguagesCallback callback) {
+        Runnable runnable = () -> {
+            List<Language> languages = languageDao.getLanguages();
+            if (!languages.isEmpty()) {
+                callback.onLanguagesLoad(languages);
+            } else callback.onDataLoadFailed();
+        };
+        executor.execute(runnable);
+    }
+
+    @Override
+    public void getStationByLanguage(RadioRepository.LoadStationsCallback callback, String language) {
+
+    }
+
+    @Override
     public void getStationSearchResult(RadioRepository.LoadStationsCallback callback, String name) {
 
     }
@@ -69,6 +88,12 @@ public class RadioLocalDataSource implements RadioDataSource.Local {
     @Override
     public void saveCountries(List<Country> countries) {
         Runnable runnable = () -> countryDao.saveCountries(countries);
+        executor.execute(runnable);
+    }
+
+    @Override
+    public void saveLanguages(List<Language> languages) {
+        Runnable runnable = () -> languageDao.saveLanguages(languages);
         executor.execute(runnable);
     }
 

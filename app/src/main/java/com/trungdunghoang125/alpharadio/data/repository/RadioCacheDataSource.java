@@ -3,6 +3,7 @@ package com.trungdunghoang125.alpharadio.data.repository;
 import android.util.SparseArray;
 
 import com.trungdunghoang125.alpharadio.data.domain.Country;
+import com.trungdunghoang125.alpharadio.data.domain.Language;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ public class RadioCacheDataSource implements RadioDataSource.Local {
     private static RadioCacheDataSource sInstance;
 
     private final SparseArray<Country> cachedCountries = new SparseArray<>();
+
+    private final SparseArray<Language> cachedLanguages = new SparseArray<>();
 
     // cache to store station list when call service
     public static final List<RadioStation> cacheStations = new ArrayList<>();
@@ -47,6 +50,25 @@ public class RadioCacheDataSource implements RadioDataSource.Local {
     }
 
     @Override
+    public void getLanguages(RadioRepository.LoadLanguagesCallback callback) {
+        if (cachedLanguages.size() > 0) {
+            List<Language> languages = new ArrayList<>();
+            for (int i = 0; i < cachedLanguages.size(); i++) {
+                int key = cachedLanguages.keyAt(i);
+                languages.add(cachedLanguages.get(key));
+            }
+            callback.onLanguagesLoad(languages);
+        } else {
+            callback.onDataLoadFailed();
+        }
+    }
+
+    @Override
+    public void getStationByLanguage(RadioRepository.LoadStationsCallback callback, String language) {
+
+    }
+
+    @Override
     public void getStationSearchResult(RadioRepository.LoadStationsCallback callback, String name) {
 
     }
@@ -62,6 +84,15 @@ public class RadioCacheDataSource implements RadioDataSource.Local {
         for (int i = 0; i < countries.size(); i++) {
             Country country = countries.get(i);
             cachedCountries.put(i, country);
+        }
+    }
+
+    @Override
+    public void saveLanguages(List<Language> languages) {
+        cachedLanguages.clear();
+        for (int i = 0; i < languages.size(); i++) {
+            Language language = languages.get(i);
+            cachedLanguages.put(i, language);
         }
     }
 

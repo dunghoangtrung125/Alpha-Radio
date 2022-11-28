@@ -1,6 +1,7 @@
 package com.trungdunghoang125.alpharadio.data.repository;
 
 import com.trungdunghoang125.alpharadio.data.domain.Country;
+import com.trungdunghoang125.alpharadio.data.domain.Language;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 
 import java.util.List;
@@ -14,6 +15,10 @@ public interface RadioDataSource {
 
         void getCountryRadioStation(RadioRepository.LoadStationsCallback callback, String countryCode);
 
+        void getLanguages(RadioRepository.LoadLanguagesCallback callback);
+
+        void getStationByLanguage(RadioRepository.LoadStationsCallback callback, String language);
+
         void getStationSearchResult(RadioRepository.LoadStationsCallback callback, String name);
 
         void getPopStation(RadioRepository.LoadStationsCallback callback);
@@ -21,6 +26,8 @@ public interface RadioDataSource {
 
     interface Local extends Remote {
         void saveCountries(List<Country> countries);
+
+        void saveLanguages(List<Language> languages);
 
         void saveStations(List<RadioStation> stations);
 

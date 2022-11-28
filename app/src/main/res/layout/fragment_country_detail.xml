@@ -8,12 +8,36 @@
     android:orientation="vertical"
     tools:context=".ui.fragment.CountryDetailFragment">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/country_detail_app_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_0"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_back_country_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_16"
+            android:background="?android:selectableItemBackground"
+            android:src="@drawable/ic_arrow_back"
+            app:layout_constraintBottom_toTopOf="@+id/search_view_station"
+            app:layout_constraintStart_toStartOf="@+id/country_detail_app_bar"
+            app:layout_constraintTop_toTopOf="@+id/country_detail_app_bar" />
+
+        <TextView
+            android:id="@+id/tv_country_name_app_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_24"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/search_view_station"
+            app:layout_constraintEnd_toEndOf="@+id/country_detail_app_bar"
+            app:layout_constraintStart_toStartOf="@+id/country_detail_app_bar"
+            app:layout_constraintTop_toTopOf="@+id/country_detail_app_bar" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/search_view_station"
@@ -21,17 +45,19 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_16"
             android:layout_marginEnd="@dimen/dimen_16"
+            android:layout_marginBottom="@dimen/dimen_8"
             android:background="@drawable/drawable_search_view"
             app:defaultQueryHint="@string/search_station_hint"
-            app:iconifiedByDefault="false" />
-    </LinearLayout>
+            app:iconifiedByDefault="false"
+            app:layout_constraintBottom_toBottomOf="@+id/country_detail_app_bar" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_to_refresh_station"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_0"
         android:layout_gravity="center"
-        android:layout_weight="7">
+        android:layout_weight="6">
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -73,6 +73,7 @@ public class HomeFragment extends Fragment implements PopStationAdapter.ItemClic
                         CountryFragment.start(requireActivity());
                         break;
                     case 1:
+                        LanguageFragment.start(requireActivity());
                         break;
                 }
             }

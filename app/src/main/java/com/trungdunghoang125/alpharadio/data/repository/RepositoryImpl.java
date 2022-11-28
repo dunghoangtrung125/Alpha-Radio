@@ -3,6 +3,7 @@ package com.trungdunghoang125.alpharadio.data.repository;
 import android.util.Log;
 
 import com.trungdunghoang125.alpharadio.data.domain.Country;
+import com.trungdunghoang125.alpharadio.data.domain.Language;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 
 import java.util.List;
@@ -64,9 +65,62 @@ public class RepositoryImpl implements RadioRepository {
     }
 
     @Override
+    public void getLanguages(LoadLanguagesCallback callback) {
+        if (callback == null) return;
+
+        cache.getLanguages(new LoadLanguagesCallback() {
+            @Override
+            public void onLanguagesLoad(List<Language> languages) {
+                callback.onLanguagesLoad(languages);
+            }
+
+            @Override
+            public void onDataLoadFailed() {
+                getLanguagesFromLocal(callback);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+    }
+
+    @Override
+    public void saveLanguages(List<Language> languages) {
+        local.saveLanguages(languages);
+    }
+
+    @Override
     public void getStations(LoadStationsCallback callback, String countryCode) {
         if (callback == null) return;
         getStationsFromRemote(callback, countryCode);
+    }
+
+    @Override
+    public void getStationsByLanguage(LoadStationsCallback callback, String language) {
+        if (callback == null) return;
+        getStationsByLanguageFromRemote(callback, language);
+    }
+
+    private void getStationsByLanguageFromRemote(LoadStationsCallback callback, String language) {
+        remote.getStationByLanguage(new LoadStationsCallback() {
+            @Override
+            public void onStationsLoad(List<RadioStation> stations) {
+                callback.onStationsLoad(stations);
+                refreshStationsCache(stations);
+            }
+
+            @Override
+            public void onDataLoadFailed() {
+                callback.onDataLoadFailed();
+            }
+
+            @Override
+            public void onError() {
+                callback.onError();
+            }
+        }, language);
     }
 
     @Override
@@ -144,6 +198,47 @@ public class RepositoryImpl implements RadioRepository {
         });
     }
 
+    private void getLanguagesFromLocal(LoadLanguagesCallback callback) {
+        local.getLanguages(new LoadLanguagesCallback() {
+            @Override
+            public void onLanguagesLoad(List<Language> languages) {
+                callback.onLanguagesLoad(languages);
+                refreshLanguagesCache(languages);
+            }
+
+            @Override
+            public void onDataLoadFailed() {
+                getLanguagesFromRemote(callback);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+    }
+
+    private void getLanguagesFromRemote(LoadLanguagesCallback callback) {
+        remote.getLanguages(new LoadLanguagesCallback() {
+            @Override
+            public void onLanguagesLoad(List<Language> languages) {
+                callback.onLanguagesLoad(languages);
+                refreshLanguagesCache(languages);
+                saveLanguages(languages);
+            }
+
+            @Override
+            public void onDataLoadFailed() {
+                callback.onDataLoadFailed();
+            }
+
+            @Override
+            public void onError() {
+                callback.onError();
+            }
+        });
+    }
+
     private void getCountriesFromLocal(LoadCountriesCallback callback) {
         local.getCountries(new LoadCountriesCallback() {
             @Override
@@ -188,6 +283,10 @@ public class RepositoryImpl implements RadioRepository {
 
     private void refreshCountriesCache(List<Country> countries) {
         cache.saveCountries(countries);
+    }
+
+    private void refreshLanguagesCache(List<Language> languages) {
+        cache.saveLanguages(languages);
     }
 
     private void getStationsFromRemote(LoadStationsCallback callback, String countryCode) {

@@ -2,6 +2,7 @@ package com.trungdunghoang125.alpharadio.data.repository;
 
 
 import com.trungdunghoang125.alpharadio.data.domain.Country;
+import com.trungdunghoang125.alpharadio.data.domain.Language;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 
 import java.util.List;
@@ -23,6 +24,18 @@ public interface RadioRepository {
 
     void saveCountries(List<Country> countries);
 
+    interface LoadLanguagesCallback {
+        void onLanguagesLoad(List<Language> languages);
+
+        void onDataLoadFailed();
+
+        void onError();
+    }
+
+    void getLanguages(LoadLanguagesCallback callback);
+
+    void saveLanguages(List<Language> languages);
+
     interface LoadStationsCallback {
         void onStationsLoad(List<RadioStation> stations);
 
@@ -32,6 +45,8 @@ public interface RadioRepository {
     }
 
     void getStations(LoadStationsCallback callback, String countryCode);
+
+    void getStationsByLanguage(LoadStationsCallback callback, String language);
 
     void getSearchStationsResult(LoadStationsCallback callback, String name);
 

@@ -1,7 +1,7 @@
 package com.trungdunghoang125.alpharadio.data.remote;
 
 import com.trungdunghoang125.alpharadio.data.model.CountryRemote;
-import com.trungdunghoang125.alpharadio.data.model.Language;
+import com.trungdunghoang125.alpharadio.data.model.LanguageRemote;
 import com.trungdunghoang125.alpharadio.data.model.RadioStation;
 import com.trungdunghoang125.alpharadio.utils.Constants;
 
@@ -33,7 +33,21 @@ public interface RadioBrowserApi {
             "X-RapidAPI-Host: " + Constants.X_RAPIDAPI_HOST
     })
     @GET("languages")
-    Call<List<Language>> getLanguages();
+    Call<List<LanguageRemote>> getLanguages();
+
+    // Get stations by language name
+    @Headers({
+            "X-RapidAPI-Key: " + Constants.X_RAPIDAPI_KEY,
+            "X-RapidAPI-Host: " + Constants.X_RAPIDAPI_HOST
+    })
+    @GET("stations/search")
+    Call<List<RadioStation>> getLanguageRadioStation(
+            @Query("language") String language,
+            @Query("reverse") boolean reverse,
+            @Query("offset") int offset,
+            @Query("limit") int limit,
+            @Query("hidebroken") boolean hidebroken
+    );
 
     // Get Radio by country code
     @Headers({
